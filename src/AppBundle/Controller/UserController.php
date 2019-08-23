@@ -39,6 +39,7 @@ class UserController extends Controller
      * @Route("/register", methods={"POST"})
      *
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function registerProcess(Request $request)
     {
@@ -47,23 +48,29 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if (null !== $this->userService->findOneByUsername($form['username']->getData())) {
-            $email = $this->userService->findOneByUsername($form['username']->getData());
-            $this->addFlash('errors', "Email $email is already taken!");
-            return $this->render('users/register.html.twig', [
-                'user' => $user,
-                'form' => $this->createForm(UserType::class)->createView()
-            ]);
+            $username = $this->userService->findOneByUsername($form['username']->getData())->getUsername();
+            $this->addFlash('errors', "Username $username is already taken!");
+            return $this->registerRender($user);
         }
 
         if ($form['password']['first']->getData() !== $form['password']['second']->getData()) {
             $this->addFlash("errors", "Passwords mismatch!");
-            return $this->render('users/register.html.twig', [
-                'user' => $user,
-                'form' => $this->createForm(UserType::class)->createView()
-            ]);
+            return $this->registerRender($user);
         }
 
         $this->userService->save($user);
         return $this->redirectToRoute('security_login');
+    }
+
+    /**
+     * @param User $user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function registerRender(User $user): \Symfony\Component\HttpFoundation\Response
+    {
+        return $this->render('users/register.html.twig', [
+            'user' => $user,
+            'form' => $this->createForm(UserType::class)->createView()
+        ]);
     }
 }
