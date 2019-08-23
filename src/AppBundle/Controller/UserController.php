@@ -5,7 +5,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use AppBundle\Services\Users\UserServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -73,6 +76,57 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/profile", name="user_profile")
+     */
+    public function profile()
+    {
+        return $this->render('users/profile.html.twig', [
+            'user' => $this->userService->currentUser()
+        ]);
+    }
+
+    /**
+     * @Route("/profile/edit", name="edit_profile", methods={"GET"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function edit()
+    {
+       return $this->render('users/edit.html.twig', [
+           'user' => $this->userService->currentUser(),
+           'form' => $this->createForm(UserType::class)->createView()
+       ]);
+    }
+
+    /**
+     * @Route("/profile/edit", methods={"POST"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function editProcess(Request $request)
+    {
+        $currentUser = $this->userService->currentUser();
+        $form = $this->createForm(UserType::class, $currentUser);
+
+        if ($currentUser->getUsername() === $request->request->get('username')) {
+            $form->remove('username');
+        }
+
+        $form->remove('password');
+
+        $form->handleRequest($request);
+
+        $this->uploadFile($form, $currentUser);
+
+        $this->userService->update($currentUser);
+
+        return $this->redirectToRoute('user_profile');
+    }
+
+    /**
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -82,5 +136,29 @@ class UserController extends Controller
             'user' => $user,
             'form' => $this->createForm(UserType::class)->createView()
         ]);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param User|null $user
+     * @param $currentImageUrl
+     */
+    public function uploadFile(FormInterface $form, ?User $user)
+    {
+        /** @var UploadedFile $file */
+        $file = $form->get('image')->getData();
+
+        //TO ADD: SHOULD BE ABLE TO EDIT WITHOUT UPLOADING PICTURE
+
+        if ($file) {
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+            $file->move(
+                $this->getParameter('users_directory'),
+                $fileName
+            );
+
+            $user->setImage($fileName);
+        }
     }
 }
