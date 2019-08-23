@@ -63,6 +63,16 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/logout", name="security_logout")
+     *
+     * @throws \Exception
+     */
+    public function logout()
+    {
+        throw new \Exception('logout failed');
+    }
+
+    /**
      * @param User $user
      * @return \Symfony\Component\HttpFoundation\Response
      */
