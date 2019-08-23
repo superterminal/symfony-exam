@@ -2,11 +2,13 @@
 
 namespace AppBundle\Controller;
 
+
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use AppBundle\Services\Users\UserServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,9 +119,12 @@ class UserController extends Controller
 
         $form->remove('password');
 
+        $currentImageUrl = $currentUser->getImage();
+
         $form->handleRequest($request);
 
-        $this->uploadFile($form, $currentUser);
+        $this->uploadFile($form, $currentUser, $currentImageUrl);
+
 
         $this->userService->update($currentUser);
 
@@ -143,7 +148,7 @@ class UserController extends Controller
      * @param User|null $user
      * @param $currentImageUrl
      */
-    public function uploadFile(FormInterface $form, ?User $user)
+    public function uploadFile(FormInterface $form, ?User $user, $currentImageUrl)
     {
         /** @var UploadedFile $file */
         $file = $form->get('image')->getData();
@@ -159,6 +164,10 @@ class UserController extends Controller
             );
 
             $user->setImage($fileName);
+
+            $fs = new Filesystem();
+            $fs->remove($currentImageUrl);
+            //unlink('web/uploads/images/users/' . $currentImageUrl);
         }
     }
 }
