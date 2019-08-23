@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container body-content">
+        <div class="row">
+{#            {% for msg in app.flashes('info') %}#}
+{#                <div class="alert alert-success">#}
+{#                    {{ msg }}#}
+{#                </div>#}
+{#            {% endfor %}#}
+
+{#            {% for msg in app.session.flashbag.get('errors') %}#}
+{#                <div class="alert alert-success">#}
+{#                    {{ msg }}#}
+{#                    <button type="button" class="close" data-dismiss="alert" aria-label="close">#}
+{#                        <span aria-hidden="true">x</span>#}
+{#                    </button>#}
+{#                </div>#}
+{#            {% endfor %}#}
+
+{#            {% for article in articles %}#}
+{#                <div class="col-md-6">#}
+{#                    <article>#}
+
+{#                        <a href="{{ path('article_view', {id: article.id}) }}">#}
+{#                            <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" width="400px" height="200px">#}
+{#                        </a>#}
+
+{#                        <header>#}
+{#                            <h2>{{ article.title }}</h2>#}
+{#                        </header>#}
+
+{#                        <p>#}
+{#                            {{ article.summary }}#}
+{#                        </p>#}
+
+{#                        <small>Views: {{ article.viewCount }}</small><br/>#}
+{#                        <small>Date Added: {{ article.dateAdded|date("F jS \\a\\t g:ia", "Europe/Sofia") }}</small>#}
+
+{#                        <small class="author">#}
+{#                            {{ article.author.fullName }}#}
+{#                        </small>#}
+
+{#                        <footer>#}
+{#                            <div class="pull-right">#}
+{#                                <a class="btn btn-default btn-xs"#}
+{#                                   href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;</a>#}
+{#                            </div>#}
+{#                        </footer>#}
+{#                    </article>#}
+{#                </div>#}
+{#            {% endfor %}#}
+        </div>
+    </div>
+{% endblock %}
+
