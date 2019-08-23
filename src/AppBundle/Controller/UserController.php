@@ -47,7 +47,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if (null !== $this->userService->findOneByUsername($form['username']->getData())) {
-            $email = $this->userService->findOneByUsername($form['username']->getData()->getUsername());
+            $email = $this->userService->findOneByUsername($form['username']->getData());
             $this->addFlash('errors', "Email $email is already taken!");
             return $this->render('users/register.html.twig', [
                 'user' => $user,
