@@ -178,6 +178,21 @@ class User
         return $this->image;
     }
 
+    public function getSalt()
+    {
+        // The bcrypt and argon2i algorithms don't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
+    }
+
+    public function getRoles()
+    {
+        return [];
+    }
+
+    public function eraseCredentials()
+    {
+    }
 
 }
 

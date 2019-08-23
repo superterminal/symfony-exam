@@ -6,6 +6,8 @@ namespace AppBundle\Services\Users;
 
 use AppBundle\Entity\User;
 use AppBundle\Repository\UserRepository;
+use AppBundle\Services\Encryption\EncryptionServiceInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserService implements UserServiceInterface
 {
@@ -15,9 +17,23 @@ class UserService implements UserServiceInterface
      */
     private $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    /**
+     * @var EncryptionServiceInterface
+     */
+    private $encryptionService;
+
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(UserRepository $userRepository,
+                                EncryptionServiceInterface $encryptionService,
+                                Security $security)
     {
         $this->userRepository = $userRepository;
+        $this->encryptionService = $encryptionService;
+        $this->security = $security;
     }
 
     /**
@@ -29,33 +45,58 @@ class UserService implements UserServiceInterface
         return $this->userRepository->findOneBy(['username' => $username]);
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function save(User $user): bool
     {
-        
+        $passwordHash = $this->encryptionService->hash($user->getPassword());
+        $user->setPassword($passwordHash);
+
+        //to add ROLES and default picture
+        $user->setImage('');
+
+        return $this->userRepository->insert($user);
     }
 
+    /**
+     * @param User|null $user
+     * @return bool
+     */
     public function update(?User $user): bool
     {
-        // TODO: Implement update() method.
+        return $this->userRepository->update($user);
     }
 
+    /**
+     * @param int $id
+     * @return User|null|object
+     */
     public function findOneById(int $id): ?User
     {
-        // TODO: Implement findOneById() method.
+        return $this->userRepository->findOneBy(['id' => $id]);
     }
 
+    /**
+     * @param User $user
+     * @return User|null|object
+     */
     public function findOne(User $user): ?User
     {
-        // TODO: Implement findOne() method.
+        return $this->userRepository->find($user);
     }
 
+    /**
+     * @return User|null|object
+     */
     public function currentUser(): ?User
     {
-        // TODO: Implement currentUser() method.
+        return $this->security->getUser();
     }
 
     public function getAll()
     {
-        // TODO: Implement getAll() method.
+        return $this->userRepository->findAll();
     }
 }

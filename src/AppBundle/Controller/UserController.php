@@ -4,12 +4,23 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use AppBundle\Services\Users\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends Controller
 {
+
+    /**
+     * @var UserServiceInterface
+     */
+    private $userService;
+
+    public function __construct(UserServiceInterface $userService)
+    {
+        $this->userService = $userService;
+    }
 
     /**
      * @Route("/register", name="user_register", methods={"GET"})
@@ -35,8 +46,24 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        var_dump($form);
-        exit;
+        if (null !== $this->userService->findOneByUsername($form['username']->getData())) {
+            $email = $this->userService->findOneByUsername($form['username']->getData()->getUsername());
+            $this->addFlash('errors', "Email $email is already taken!");
+            return $this->render('users/register.html.twig', [
+                'user' => $user,
+                'form' => $this->createForm(UserType::class)->createView()
+            ]);
+        }
 
+        if ($form['password']['first']->getData() !== $form['password']['second']->getData()) {
+            $this->addFlash("errors", "Passwords mismatch!");
+            return $this->render('users/register.html.twig', [
+                'user' => $user,
+                'form' => $this->createForm(UserType::class)->createView()
+            ]);
+        }
+
+        $this->userService->save($user);
+        return $this->redirectToRoute('security_login');
     }
 }
