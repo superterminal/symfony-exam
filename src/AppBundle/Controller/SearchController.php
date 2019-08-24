@@ -43,6 +43,8 @@ class SearchController extends Controller
 
         $object = $serializer->deserialize($result, 'AppBundle\Entity\Page', 'json')->getResults();
 
+        $movies = [];
+
         foreach ($object as $movie) {
             $movies[] = $serializer->deserialize(json_encode($movie), 'AppBundle\Entity\Movie', 'json');
         }
