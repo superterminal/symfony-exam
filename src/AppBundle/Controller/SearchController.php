@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Search;
 use AppBundle\Form\SearchType;
 use AppBundle\Services\Request\RequestServiceInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializerBuilder;
+use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,19 +27,10 @@ class SearchController extends Controller
     }
 
     /**
-     * @Route("/search", name="search_action", methods={"GET"})
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function search()
-    {
-        return $this->render('browse/load.html.twig');
-    }
-
-    /**
-     * @Route("/search", methods={"POST"})
+     * @Route("/search", name="search_action", methods={"POST", "GET"}, defaults={"page": 1})
      *
      * @param Request $request
+     * @param $page
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchAction(Request $request)
@@ -45,13 +38,23 @@ class SearchController extends Controller
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
         $form->handleRequest($request);
+        $currentInput = $search->getInput();
 
-        $result = $this->requestService->getByQuery($search->getInput(), $this->container);
+        $result = $this->requestService->getByQuery($currentInput, $this->container);
         $serializer = SerializerBuilder::create()->build();
+
         $object = $serializer->deserialize($result, 'AppBundle\Entity\Page', 'json');
 
+        /** @var Paginator $paginator */
+        $paginator = $this->get('knp_paginator');
+        $paginatedMovies = $paginator->paginate(
+            $object->getResults(),
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 3)
+        );
+
         return $this->render('browse/load.html.twig', [
-            'data' => $object
+            'result' => $paginatedMovies
         ]);
     }
 }

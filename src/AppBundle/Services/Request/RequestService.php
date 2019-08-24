@@ -15,7 +15,13 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const API_KEY = '09d9101382d79a2be4f6c5081fb53919';
 
-    public function getByQuery(string $query, $container): string
+    /**
+     * @param string|null $query
+     * @param $container
+     * @return string|null
+     * @throws \Exception
+     */
+    public function getByQuery(?string $query, $container): ?string
     {
         /** @var Container $restClient */
         $restClient = $container->get('circle.restclient');

@@ -31,6 +31,7 @@ framework:
     assets: ~
     php_errors:
         log: true
+    translator: { fallbacks: ['%locale%'] }
 
 # Twig Configuration
 twig:
@@ -76,4 +77,3 @@ circle_rest_client:
         defaults:
             CURLOPT_HTTPHEADER:     [ 'Content-Type: application/json' ]
             CURLOPT_FOLLOWLOCATION: true
-
