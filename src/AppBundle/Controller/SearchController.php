@@ -42,7 +42,7 @@ class SearchController extends Controller
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
         $form->handleRequest($request);
-        
+
 
         print_r($this->requestService->getByQuery($search->getInput(), $this->container));
         exit;
