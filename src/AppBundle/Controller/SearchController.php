@@ -41,12 +41,18 @@ class SearchController extends Controller
         $result = $this->requestService->getByQuery($currentInput, $this->container);
         $serializer = SerializerBuilder::create()->build();
 
-        $object = $serializer->deserialize($result, 'AppBundle\Entity\Page', 'json');
+        $object = $serializer->deserialize($result, 'AppBundle\Entity\Page', 'json')->getResults();
+
+        foreach ($object as $movie) {
+            $movies[] = $serializer->deserialize(json_encode($movie), 'AppBundle\Entity\Movie', 'json');
+        }
+
+        var_dump($movies);
 
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
         $paginatedMovies = $paginator->paginate(
-            $object->getResults(),
+            $movies,
             $request->query->getInt('page', 1),
             $request->query->getInt('limit', 3)
         );
