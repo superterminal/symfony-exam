@@ -27,7 +27,7 @@ class SearchController extends Controller
     }
 
     /**
-     * @Route("/search", name="search_action", methods={"POST", "GET"}, defaults={"page": 1})
+     * @Route("/search", name="search_action", methods={"POST", "GET"})
      *
      * @param Request $request
      * @param $page
