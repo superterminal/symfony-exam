@@ -36,8 +36,9 @@ class SearchController extends Controller
 
     /**
      * @Route("/search", methods={"POST"})
-
+     *
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchAction(Request $request)
     {
@@ -46,10 +47,11 @@ class SearchController extends Controller
         $form->handleRequest($request);
 
         $result = $this->requestService->getByQuery($search->getInput(), $this->container);
-        //$resultJson = json_decode($result, true)['results'];
         $serializer = SerializerBuilder::create()->build();
         $object = $serializer->deserialize($result, 'AppBundle\Entity\Page', 'json');
-        var_dump($object);
-        exit;
+
+        return $this->render('browse/load.html.twig', [
+            'data' => $object
+        ]);
     }
 }

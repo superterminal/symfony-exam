@@ -27,12 +27,10 @@ class RequestService extends Controller implements RequestServiceInterface
     }
 
 
-    public function getImage(string $imageUrl, $container)
+    public function getImageUrl(string $imageUrl)
     {
-        $restClient = $container->get('circle.restclient');
-
         $url = self::BASE_IMAGE_URL . $imageUrl;
 
-        return $restClient->get($url);
+        return $url;
     }
 }

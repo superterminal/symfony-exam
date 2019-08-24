@@ -9,13 +9,13 @@ class MovieController extends Controller
 {
 
     /**
-     * @Route("/movies/display", methods={"GET"})
+     * @Route("/movies/display", name="display_movies_from_search", methods={"GET"})
      *
      * @param $name
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
-
+        return $this->render('browse/load.html.twig');
     }
 }
