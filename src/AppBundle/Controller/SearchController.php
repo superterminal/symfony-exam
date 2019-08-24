@@ -47,8 +47,6 @@ class SearchController extends Controller
             $movies[] = $serializer->deserialize(json_encode($movie), 'AppBundle\Entity\Movie', 'json');
         }
 
-        var_dump($movies);
-
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
         $paginatedMovies = $paginator->paginate(

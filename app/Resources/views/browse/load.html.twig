@@ -5,8 +5,8 @@
     Total items: {{ result.getTotalItemCount }} <br>
     <br>
     {% for movie in result %}
-        {{ movie.original_title }}<br>
-        <img src="{{ loadImage(movie.poster_path) }}" alt="" width="200px" height="300px">
+        {{ movie.originalTitle }}<br>
+        <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px">
         <hr>
     {% endfor %}
 
