@@ -70,3 +70,9 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
+
+circle_rest_client:
+    curl:
+        defaults:
+            CURLOPT_HTTPHEADER:     [ 'Content-Type: application/json' ]
+            CURLOPT_FOLLOWLOCATION: true

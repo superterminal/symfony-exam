@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Search;
 use AppBundle\Form\SearchType;
+use AppBundle\Services\Request\RequestServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,14 +13,23 @@ class SearchController extends Controller
 {
 
     /**
+     * @var RequestServiceInterface
+     */
+    private $requestService;
+
+    public function __construct(RequestServiceInterface $requestService)
+    {
+        $this->requestService = $requestService;
+    }
+
+    /**
      * @Route("/search", name="search_action", methods={"GET"})
      *
-     * @param $name
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function search()
     {
-        return $this->render('search/index.html.twig');
+        return $this->render('browse/load.html.twig');
     }
 
     /**
@@ -32,8 +42,9 @@ class SearchController extends Controller
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
         $form->handleRequest($request);
+        
 
-        var_dump($search->getInput());
+        print_r($this->requestService->getByQuery($search->getInput(), $this->container));
         exit;
     }
 }

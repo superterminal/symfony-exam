@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Search
  *
- * @ORM\Table(name="search")
+ * @ORM\Table(name="browse")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SearchRepository")
  */
 class Search
