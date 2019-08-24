@@ -10,4 +10,5 @@ interface RequestServiceInterface
 {
     public function getByQuery(?string $query, $container): ?string;
     public function getImageUrl(string $imageUrl);
+    public function getTrendingMoviesByDay($container);
 }

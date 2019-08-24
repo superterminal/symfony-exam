@@ -3,6 +3,8 @@
 {% block body %}
 
     <div class="container body-content">
+        <h1>Welcome</h1>
+        <h4>Here are today's most trending movies</h4>
         <div class="row">
 {#            {% for msg in app.flashes('info') %}#}
 {#                <div class="alert alert-success">#}
@@ -19,38 +21,19 @@
 {#                </div>#}
 {#            {% endfor %}#}
 
-{#            {% for article in articles %}#}
-{#                <div class="col-md-6">#}
-{#                    <article>#}
+            {% for movie in movies %}
+                <div class="col-md-4">
+                    <article>
 
-{#                        <a href="{{ path('article_view', {id: article.id}) }}">#}
-{#                            <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" width="400px" height="200px">#}
-{#                        </a>#}
+                        <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px"><br>
+                        <h2>{{ movie.originalTitle }}</h2>
 
-{#                        <header>#}
-{#                            <h2>{{ article.title }}</h2>#}
-{#                        </header>#}
+                        <h4>{{ movie.overview }}</h4>
 
-{#                        <p>#}
-{#                            {{ article.summary }}#}
-{#                        </p>#}
 
-{#                        <small>Views: {{ article.viewCount }}</small><br/>#}
-{#                        <small>Date Added: {{ article.dateAdded|date("F jS \\a\\t g:ia", "Europe/Sofia") }}</small>#}
-
-{#                        <small class="author">#}
-{#                            {{ article.author.fullName }}#}
-{#                        </small>#}
-
-{#                        <footer>#}
-{#                            <div class="pull-right">#}
-{#                                <a class="btn btn-default btn-xs"#}
-{#                                   href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;</a>#}
-{#                            </div>#}
-{#                        </footer>#}
-{#                    </article>#}
-{#                </div>#}
-{#            {% endfor %}#}
+                    </article>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

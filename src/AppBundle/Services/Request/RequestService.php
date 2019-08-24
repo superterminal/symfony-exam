@@ -11,6 +11,8 @@ class RequestService extends Controller implements RequestServiceInterface
 {
     const BASE_URL = 'https://api.themoviedb.org/3/search/movie';
 
+    const TRENDING_URL = 'https://api.themoviedb.org/3/trending/movie/day';
+
     const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
     const API_KEY = '09d9101382d79a2be4f6c5081fb53919';
@@ -38,5 +40,14 @@ class RequestService extends Controller implements RequestServiceInterface
         $url = self::BASE_IMAGE_URL . $imageUrl;
 
         return $url;
+    }
+
+    public function getTrendingMoviesByDay($container)
+    {
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::TRENDING_URL . "?api_key=" . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
     }
 }

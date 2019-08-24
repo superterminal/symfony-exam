@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Search;
 use AppBundle\Form\SearchType;
 use AppBundle\Services\Request\RequestServiceInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializerBuilder;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,7 +29,6 @@ class SearchController extends Controller
      * @Route("/search", name="search_action", methods={"POST", "GET"})
      *
      * @param Request $request
-     * @param $page
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchAction(Request $request)
