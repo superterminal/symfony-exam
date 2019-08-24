@@ -9,4 +9,5 @@ use Symfony\Component\HttpFoundation\Request;
 interface RequestServiceInterface
 {
     public function getByQuery(string $query, $container): string;
+    public function getImage(string $imageUrl, $container);
 }
