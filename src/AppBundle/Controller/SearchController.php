@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Search;
 use AppBundle\Form\SearchType;
 use AppBundle\Services\Request\RequestServiceInterface;
+use AppBundle\Services\Serializer\SerializerServiceInterface;
 use JMS\Serializer\SerializerBuilder;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,9 +21,16 @@ class SearchController extends Controller
      */
     private $requestService;
 
-    public function __construct(RequestServiceInterface $requestService)
+    /**
+     * @var SerializerServiceInterface
+     */
+    private $serializerService;
+
+    public function __construct(RequestServiceInterface $requestService,
+                                SerializerServiceInterface $serializerService)
     {
         $this->requestService = $requestService;
+        $this->serializerService = $serializerService;
     }
 
     /**
@@ -39,14 +47,14 @@ class SearchController extends Controller
         $currentInput = $search->getInput();
 
         $result = $this->requestService->getByQuery($currentInput, $this->container);
-        $serializer = SerializerBuilder::create()->build();
 
-        $object = $serializer->deserialize($result, 'AppBundle\Entity\Page', 'json')->getResults();
+
+        $object = $this->serializerService->deserialize($result, 'AppBundle\Entity\Page')->getResults();
 
         $movies = [];
 
         foreach ($object as $movie) {
-            $movies[] = $serializer->deserialize(json_encode($movie), 'AppBundle\Entity\Movie', 'json');
+            $movies[] = $this->serializerService->deserialize(json_encode($movie), 'AppBundle\Entity\Movie');
         }
 
         /** @var Paginator $paginator */
