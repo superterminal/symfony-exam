@@ -46,17 +46,13 @@ class SearchController extends Controller
         $form->handleRequest($request);
         $currentInput = $search->getInput();
 
-        $result = $this->requestService->getByQuery($currentInput, $this->container);
+        $resultFromApi = $this->requestService->getByQuery($currentInput, $this->container);
 
+        $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
-        $object = $this->serializerService->deserialize($result, 'AppBundle\Entity\Page')->getResults();
-
-        $movies = [];
-
-        foreach ($object as $movie) {
-            $movies[] = $this->serializerService->deserialize(json_encode($movie), 'AppBundle\Entity\Movie');
-        }
-
+        $movies = $this->serializerService->deserializeMovies($moviesAsArray, 'Movie');
+var_dump($movies);
+exit;
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
         $paginatedMovies = $paginator->paginate(

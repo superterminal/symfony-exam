@@ -10,15 +10,43 @@ class SerializerService implements SerializerServiceInterface
 {
 
     /**
+     * @var \JMS\Serializer\SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct()
+    {
+        $this->serializer = SerializerBuilder::create()->build();
+    }
+
+    /**
      * @param $data
-     * @param $type
+     * @param $entity
      * @param string $format
      * @return mixed
      */
-    public function deserialize($data, $type, $format = 'json')
+    public function deserialize($data, $entity, $format = 'json')
     {
-        $serializer = SerializerBuilder::create()->build();
+        $type = 'AppBundle\Entity\\' . $entity;
 
-        return $serializer->deserialize($data, $type, $format);
+        return $this->serializer->deserialize($data, $type, $format);
+    }
+
+    /**
+     * @param $data
+     * @param $entity
+     * @param string $format
+     * @return array
+     */
+    public function deserializeMovies($data, $entity, $format = 'json')
+    {
+        $movies = [];
+        $type = 'AppBundle\Entity\\' . $entity;
+
+        foreach ($data as $movie) {
+            $movies[] = $this->serializer->deserialize(json_encode($movie), $type, $format);
+        }
+
+        return $movies;
     }
 }
