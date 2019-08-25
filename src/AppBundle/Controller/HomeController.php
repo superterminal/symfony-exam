@@ -2,8 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Services\Paginator\PaginatorServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
-use JMS\Serializer\SerializerBuilder;
+use AppBundle\Services\Serializer\SerializerServiceInterface;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,30 +18,46 @@ class HomeController extends Controller
      */
     private $requestService;
 
-    public function __construct(RequestServiceInterface $requestService)
+
+    /**
+     * @var SerializerServiceInterface
+     */
+    private $serializerService;
+
+    /**
+     * @var PaginatorServiceInterface
+     */
+    private $paginatorService;
+
+
+    public function __construct(RequestServiceInterface $requestService,
+                                SerializerServiceInterface $serializerService,
+                                PaginatorServiceInterface $paginatorService)
     {
         $this->requestService = $requestService;
+        $this->serializerService = $serializerService;
+        $this->paginatorService = $paginatorService;
     }
 
     /**
      * @Route("/", name="movies_index")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function index(Request $request)
     {
         $trendingMovies = $this->requestService->getTrendingMoviesByDay($this->container);
-        $serializer = SerializerBuilder::create()->build();
-        $moviesAsArray = $serializer->deserialize($trendingMovies, 'AppBundle\Entity\Page', 'json')->getResults();
 
-        foreach ($moviesAsArray as $movie) {
-            $movies[] = $serializer->deserialize(json_encode($movie), 'AppBundle\Entity\TrendingMovie', 'json');
-        }
+        $moviesAsArray = $this->serializerService->deserialize($trendingMovies, 'Page')->getResults();
+
+        $movies = $this->serializerService->deserializeMovies($moviesAsArray, 'Movie');
 
         /** @var Paginator $paginator */
-        $paginator = $this->get('knp_paginator');
-        $paginatedMovies = $paginator->paginate(
+        $paginatedMovies = $this->paginatorService->paginate(
             $movies,
-            1,
-            3
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 3)
         );
 
         return $this->render('home/index.html.twig', [
