@@ -24,16 +24,23 @@
             {% for movie in movies %}
                 <div class="col-md-4">
                     <article>
-
-                        <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px"><br>
-                        <h2>{{ movie.originalTitle }}</h2>
-
-                        <h4>{{ movie.overview }}</h4>
+                        
+                        <a href="{{ path('view_movie', {id: movie.id}) }}">
+                            <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px"><br>
+                            <h2>{{ movie.originalTitle }}</h2>
+                            <h4>{{ movie.id }}</h4>
+                        </a>
+{#                        <h4>{{ movie.overview }}</h4>#}
 
 
                     </article>
                 </div>
+
+
             {% endfor %}
+            <div class="navigation">
+                {{ knp_pagination_render(movies) }}
+            </div>
         </div>
     </div>
 {% endblock %}

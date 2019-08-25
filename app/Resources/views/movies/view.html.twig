@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <h1>add more properties for display</h1>
+    <div class="col-md-12">
+        <article style="text-align: center">
+
+            <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px"><br>
+            <h2>{{ movie.originalTitle }}</h2>
+            <h4>{{ movie.id }}</h4>
+            <small>Date added: </small>
+{#            <small>Date Added: {{ movie.releaseDate|date('Y-m-d') }}</small>#}
+
+        </article>
+        <h4>{{ movie.overview }}</h4>
+    </div>
+
+    <a class="btn btn-default btn-xs" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
+
+{% endblock %}
