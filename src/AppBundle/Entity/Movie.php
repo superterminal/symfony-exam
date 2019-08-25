@@ -125,18 +125,18 @@ class Movie
     private $posterPath;
 
     /**
-     * @var int
+     * @var string
      *
-     * @Serializer\Type("int")
+     * @Serializer\Type("string")
      *
-     * @ORM\Column(name="imdb_id", type="integer")
+     * @ORM\Column(name="imdb_id", type="string")
      */
     private $imdbId;
 
     /**
      * @var string
      *
-     * @Serializer\Type("int")
+     * @Serializer\Type("string")
      *
      * @ORM\Column(name="backdrop_path", type="string", length=255)
      */
@@ -168,6 +168,24 @@ class Movie
      * @ORM\Column(name="vote_average", type="float")
      */
     private $voteAverage;
+
+    /**
+     * @var string
+     *
+     * @Serializer\Type("string")
+     *
+     * @ORM\Column(name="homepage", type="string")
+     */
+    private $homepage;
+
+    /**
+     * @var float
+     *
+     * @Serializer\Type("float")
+     *
+     * @ORM\Column(name="budget", type="float")
+     */
+    private $budget;
 
 
     /**
@@ -447,7 +465,7 @@ class Movie
     /**
      * Set imdbId.
      *
-     * @param int $imdbId
+     * @param string $imdbId
      *
      * @return Movie
      */
@@ -461,7 +479,7 @@ class Movie
     /**
      * Get imdbId.
      *
-     * @return int
+     * @return string
      */
     public function getImdbId()
     {
@@ -563,4 +581,38 @@ class Movie
     {
         return $this->voteAverage;
     }
+
+    /**
+     * @return string
+     */
+    public function getHomepage(): string
+    {
+        return $this->homepage;
+    }
+
+    /**
+     * @param string $homepage
+     */
+    public function setHomepage(string $homepage): void
+    {
+        $this->homepage = $homepage;
+    }
+
+    /**
+     * @return float
+     */
+    public function getBudget(): float
+    {
+        return $this->budget;
+    }
+
+    /**
+     * @param float $budget
+     */
+    public function setBudget(float $budget): void
+    {
+        $this->budget = $budget;
+    }
+
+
 }
