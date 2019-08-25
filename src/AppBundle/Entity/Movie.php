@@ -93,7 +93,7 @@ class Movie
      *
      * @Serializer\Type("datetime")
      *
-     * @ORM\Column(name="release_date", type="date")
+     * @ORM\Column(name="release_date", type="datetime")
      */
     private $releaseDate;
 
@@ -186,7 +186,6 @@ class Movie
      * @ORM\Column(name="budget", type="float")
      */
     private $budget;
-
 
     /**
      * Get id.
