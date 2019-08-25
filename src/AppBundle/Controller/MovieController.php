@@ -2,20 +2,47 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Services\Request\RequestServiceInterface;
+use AppBundle\Services\Serializer\SerializerServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MovieController extends Controller
 {
 
     /**
-     * @Route("/movies/display", name="display_movies_from_search", methods={"GET"})
+     * @var RequestServiceInterface
+     */
+    private $requestService;
+
+    /**
+     * @var SerializerServiceInterface
+     */
+    private $serializerService;
+
+
+    public function __construct(RequestServiceInterface $requestService,
+                                SerializerServiceInterface $serializerService)
+    {
+        $this->requestService = $requestService;
+        $this->serializerService = $serializerService;
+    }
+
+    /**
+     * @Route("/movies/view/{id}", name="view_movie", methods={"GET"})
      *
-     * @param $name
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function view($id)
     {
-        return $this->render('browse/load.html.twig');
+        $movie = $this->requestService->getByMovieId($id, $this->container);
+
+        $mappedMovie = $this->serializerService->deserialize($movie, 'Movie');
+
+        return $this->render('movies/view.html.twig', [
+            'movie' => $mappedMovie
+        ]);
     }
 }

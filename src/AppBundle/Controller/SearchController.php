@@ -7,7 +7,6 @@ use AppBundle\Form\SearchType;
 use AppBundle\Services\Paginator\PaginatorServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
-use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,23 +40,38 @@ class SearchController extends Controller
     }
 
     /**
-     * @Route("/search", name="search_action", methods={"POST", "GET"})
+     * @Route("/search", name="search_action", methods={"POST"})
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction(Request $request)
+    public function getCurrentInput(Request $request)
     {
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
         $form->handleRequest($request);
-        $currentInput = $search->getInput();
 
-        $resultFromApi = $this->requestService->getByQuery($currentInput, $this->container);
+
+        return $this->redirectToRoute('search_results', [
+            'query' => $form->getData()->getInput()
+        ]);
+    }
+
+    /**
+     * @Route("/search?query={query}", name="search_results", methods={"GET", "POST"})
+     *
+     * @param Request $request
+     * @param $query
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function searchResults(Request $request, $query)
+    {
+        $resultFromApi = $this->requestService->getByQuery($query, $this->container);
 
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
         $movies = $this->serializerService->deserializeMovies($moviesAsArray, 'Movie');
+
 
         $paginatedMovies = $this->paginatorService->paginate(
             $movies,
@@ -65,8 +79,10 @@ class SearchController extends Controller
             $request->query->getInt('limit', 3)
         );
 
-        return $this->render('browse/load.html.twig', [
-            'result' => $paginatedMovies
+        return $this->render('search/load.html.twig', [
+            'result' => $paginatedMovies,
         ]);
     }
+
+
 }
