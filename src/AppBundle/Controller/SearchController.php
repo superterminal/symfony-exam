@@ -4,9 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Search;
 use AppBundle\Form\SearchType;
+use AppBundle\Services\Paginator\PaginatorServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
-use JMS\Serializer\SerializerBuilder;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,11 +26,18 @@ class SearchController extends Controller
      */
     private $serializerService;
 
+    /**
+     * @var PaginatorServiceInterface
+     */
+    private $paginatorService;
+
     public function __construct(RequestServiceInterface $requestService,
-                                SerializerServiceInterface $serializerService)
+                                SerializerServiceInterface $serializerService,
+                                PaginatorServiceInterface $paginatorService)
     {
         $this->requestService = $requestService;
         $this->serializerService = $serializerService;
+        $this->paginatorService = $paginatorService;
     }
 
     /**
@@ -51,11 +58,8 @@ class SearchController extends Controller
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
         $movies = $this->serializerService->deserializeMovies($moviesAsArray, 'Movie');
-var_dump($movies);
-exit;
-        /** @var Paginator $paginator */
-        $paginator = $this->get('knp_paginator');
-        $paginatedMovies = $paginator->paginate(
+
+        $paginatedMovies = $this->paginatorService->paginate(
             $movies,
             $request->query->getInt('page', 1),
             $request->query->getInt('limit', 3)
