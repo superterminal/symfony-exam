@@ -67,11 +67,16 @@ class RequestService extends Controller implements RequestServiceInterface
         return $restClient->get($url)->getContent();
     }
 
-    public function getByFilters($orderBy, $genre, $container)
+    public function getByFilters($orderBy, $genre, $releaseYear, $container)
     {
         $restClient = $container->get('circle.restclient');
 
-        $url = self::DISCOVER_BASE_URL . "?api_key" . self::API_KEY . "&sort_by=$orderBy&with_genres=$genre";
+        if ($genre == '\\') {
+            $genre = '';
+        }
+
+        $url = self::DISCOVER_BASE_URL . "?api_key" . self::API_KEY . "&sort_by=$orderBy&primary_release_year=$releaseYear&&with_genres=$genre";
+
 
         return $restClient->get($url)->getContent();
     }
