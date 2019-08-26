@@ -2,17 +2,16 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Search;
-use AppBundle\Form\SearchType;
-use AppBundle\Services\Paginator\PaginatorServiceInterface;
+use AppBundle\Entity\Browse;
+use AppBundle\Form\BrowseType;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-
-class SearchController extends Controller
+class BrowseController extends Controller
 {
 
     /**
@@ -26,47 +25,66 @@ class SearchController extends Controller
     private $serializerService;
 
     /**
-     * @var PaginatorServiceInterface
+     * @var PaginatorInterface
      */
     private $paginatorService;
 
     public function __construct(RequestServiceInterface $requestService,
                                 SerializerServiceInterface $serializerService,
-                                PaginatorServiceInterface $paginatorService)
+                                PaginatorInterface $paginator)
     {
         $this->requestService = $requestService;
         $this->serializerService = $serializerService;
-        $this->paginatorService = $paginatorService;
+        $this->paginatorService = $paginator;
     }
 
     /**
-     * @Route("/search", name="search_action", methods={"POST"})
+     * @Route("/browse", name="browse_index")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction()
+    {
+        $genres = $this->requestService->getGenres($this->container);
+
+        $genresAsArr = $this->serializerService->deserialize($genres, 'Page')->getGenres();
+
+        $genres = $this->serializerService->deserializeGenres($genresAsArr, 'Genre');
+
+        return $this->render('browse/browse.html.twig', [
+            'genres' => $genres
+        ]);
+    }
+
+    /**
+     * @Route("/browse/search", name="browse_action", methods={"POST"})
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getFormData(Request $request)
     {
-        $search = new Search();
-        $form = $this->createForm(SearchType::class, $search);
+        $browse = new Browse();
+        $form = $this->createForm(BrowseType::class, $browse);
         $form->handleRequest($request);
 
-
-        return $this->redirectToRoute('search_results', [
-            'query' => $form->getData()->getInput()
+        return $this->redirectToRoute('browse_results', [
+            'orderBy' => $form->getData()->getOrderBy() !== null ? $form->getData()->getOrderBy() : null ,
+            'genre' => $form->getData()->getGenre() !== null ? $form->getData()->getGenre() : null
         ]);
     }
 
     /**
-     * @Route("/search?query={query}", name="search_results", methods={"GET", "POST"})
+     * @Route("/browse/results/order_by={orderBy}&genre={genre}", name="browse_results", methods={"GET", "POST"})
      *
      * @param Request $request
-     * @param $query
+     * @param null $orderBy
+     * @param null $genre
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchResults(Request $request, $query)
+    public function searchResults(Request $request, $orderBy = null, $genre = null)
     {
-        $resultFromApi = $this->requestService->getByQuery($query, $this->container);
+        $resultFromApi = $this->requestService->getByFilters($orderBy, $genre, $this->container);
 
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
@@ -82,6 +100,7 @@ class SearchController extends Controller
             'result' => $paginatedMovies,
         ]);
     }
+
 
 
 }

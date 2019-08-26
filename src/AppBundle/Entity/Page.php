@@ -50,6 +50,14 @@ class Page
      */
     private $results;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @Serializer\Type("array")
+     *
+     * @ORM\Column(name="genres", type="array")
+     */
+    private $genres;
 
     /**
      * Get id.
@@ -132,4 +140,22 @@ class Page
     {
         return $this->results;
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getGenres()
+    {
+        return $this->genres;
+    }
+
+    /**
+     * @param ArrayCollection $genres
+     */
+    public function setGenres(ArrayCollection $genres): void
+    {
+        $this->genres = $genres;
+    }
+
+
 }
