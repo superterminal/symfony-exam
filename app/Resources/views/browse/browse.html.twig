@@ -4,7 +4,6 @@
 
     <div class="container body-content">
         <h1>Browse movies here</h1>
-        <div class="row">
 {#            {% for movie in movies %}#}
 {#                <div class="col-md-4">#}
 {#                    <article>#}
@@ -23,14 +22,14 @@
 {#            <div class="navigation text-center">#}
 {#                {{ knp_pagination_render(movies) }}#}
 {#            </div>#}
-        </div>
 
-        <form action="{{ path('browse_action') }}" method="post">
+
+        <form action="{{ path('browse_action') }}" method="post" class="col-md-6">
             <div class="form-group">
-                <label class="col-sm-1 control-label" for="search">Search for movie</label>
-                <div class="col-sm-3">
-                    <input type="search" class="form-control" id="search" placeholder="Search" name="browse[input]">
-                </div>
+{#                <label class="col-sm-1 control-label" for="search">Search for movie</label>#}
+{#                <div class="col-sm-3">#}
+{#                    <input type="search" class="form-control" id="search" placeholder="Search" name="browse[input]">#}
+{#                </div>#}
                 <label class="col-sm-1 control-label" for="order">Order by</label>
                 <select class="form-control" id="order" name="browse[orderBy]">
                     <option value="popularity.desc">Popularity desc</option>
@@ -47,6 +46,23 @@
                     <option value="{{ genre.id }}">{{ genre.name }}</option>
                     {% endfor %}
                 </select>
+                <label class="col-sm-1 control-label" for="releaseYear">Release year</label>
+                <select class="form-control" id="order" name="browse[releaseYear]">
+                    <option disabled selected></option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <h1>Or search by movie name</h1>
+        <form action="{{ path('search_action') }}" method="post" class="col-md-6">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="search">Search for movie</label>
+                <div class="col-sm-6">
+                    <input type="search" class="form-control" id="search" placeholder="Search" name="search[input]" required>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>

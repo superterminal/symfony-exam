@@ -1,19 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-
     Total items: {{ result.getTotalItemCount }} <br>
+    <h3>Search results for: orderBy: {{ orderBy }} | genre: {{ genre }}</h3>
     <br>
-    {% for movie in result %}
-        <a href="{{ path('view_movie', {id: movie.id}) }}">
-            {{ movie.originalTitle }}<br>
-            <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px">
-        </a>
-        <hr>
-    {% endfor %}
-
-    <div class="navigation text-center">
-        {{ knp_pagination_render(result) }}
+    <div class="container">
+        <div class="row">
+            {% for movie in result %}
+                <div class="col-md-4">
+                    <a href="{{ path('view_movie', {id: movie.id}) }}">
+                        {{ movie.originalTitle }}<br>
+                        <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px">
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="navigation text-center">
+            {{ knp_pagination_render(result) }}
+        </div>
     </div>
-
 {% endblock %}
