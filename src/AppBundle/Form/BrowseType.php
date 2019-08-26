@@ -15,9 +15,9 @@ class BrowseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('input')
             ->add('orderBy')
-            ->add('genre');
+            ->add('genre')
+            ->add('releaseYear');
     }
 
     /**

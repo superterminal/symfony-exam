@@ -45,14 +45,8 @@ class BrowseController extends Controller
      */
     public function indexAction()
     {
-        $genres = $this->requestService->getGenres($this->container);
-
-        $genresAsArr = $this->serializerService->deserialize($genres, 'Page')->getGenres();
-
-        $genres = $this->serializerService->deserializeGenres($genresAsArr, 'Genre');
-
         return $this->render('browse/browse.html.twig', [
-            'genres' => $genres
+            'genres' => $this->getGenres()
         ]);
     }
 
@@ -69,22 +63,24 @@ class BrowseController extends Controller
         $form->handleRequest($request);
 
         return $this->redirectToRoute('browse_results', [
-            'orderBy' => $form->getData()->getOrderBy() !== null ? $form->getData()->getOrderBy() : null ,
-            'genre' => $form->getData()->getGenre() !== null ? $form->getData()->getGenre() : null
+            'orderBy' => $form->getData()->getOrderBy(),
+            'genre' => $form->getData()->getGenre() === null ? '\\' : $form->getData()->getGenre(),
+            'releaseYear' => $form->getData()->getReleaseYear()
         ]);
     }
 
     /**
-     * @Route("/browse/results/order_by={orderBy}&genre={genre}", name="browse_results", methods={"GET", "POST"})
+     * @Route("/browse/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}", name="browse_results", methods={"GET", "POST"})
      *
      * @param Request $request
      * @param null $orderBy
      * @param null $genre
+     * @param null $releaseYear
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchResults(Request $request, $orderBy = null, $genre = null)
+    public function searchResults(Request $request, $orderBy, $genre, $releaseYear = null)
     {
-        $resultFromApi = $this->requestService->getByFilters($orderBy, $genre, $this->container);
+        $resultFromApi = $this->requestService->getByFilters($orderBy, $genre, $releaseYear, $this->container);
 
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
@@ -96,11 +92,25 @@ class BrowseController extends Controller
             $request->query->getInt('limit', 3)
         );
 
-        return $this->render('search/load.html.twig', [
+        return $this->render('browse/results.html.twig', [
+            'orderBy' => $orderBy,
+            'genre' => $genre,
             'result' => $paginatedMovies,
         ]);
     }
 
 
+    /**
+     * @return mixed
+     */
+    public function getGenres()
+    {
+        $genres = $this->requestService->getGenres($this->container);
 
+        $genresAsArr = $this->serializerService->deserialize($genres, 'Page')->getGenres();
+
+        $genres = $this->serializerService->deserializeGenres($genresAsArr, 'Genre');
+
+        return $genres;
+    }
 }

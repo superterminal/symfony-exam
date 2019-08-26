@@ -24,13 +24,6 @@ class Browse
     /**
      * @var string
      *
-     * @ORM\Column(name="input", type="string", length=255)
-     */
-    private $input;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="order_by", type="string", length=255)
      */
     private $orderBy;
@@ -41,6 +34,13 @@ class Browse
      * @ORM\Column(name="genre", type="string", length=255)
      */
     private $genre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="release_year", type="string", length=255)
+     */
+    private $releaseYear;
 
 
     /**
@@ -53,29 +53,6 @@ class Browse
         return $this->id;
     }
 
-    /**
-     * Set input.
-     *
-     * @param string $input
-     *
-     * @return Browse
-     */
-    public function setInput($input)
-    {
-        $this->input = $input;
-
-        return $this;
-    }
-
-    /**
-     * Get input.
-     *
-     * @return string
-     */
-    public function getInput()
-    {
-        return $this->input;
-    }
 
     /**
      * @return string
@@ -107,5 +84,21 @@ class Browse
     public function setGenre(string $genre): void
     {
         $this->genre = $genre;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReleaseYear(): ?string
+    {
+        return $this->releaseYear;
+    }
+
+    /**
+     * @param string $releaseYear
+     */
+    public function setReleaseYear(string $releaseYear): void
+    {
+        $this->releaseYear = $releaseYear;
     }
 }

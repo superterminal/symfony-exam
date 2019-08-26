@@ -26,15 +26,6 @@ class Genre
     private $id;
 
     /**
-     * @var int
-     *
-     * @Serializer\Type("int")
-     *
-     * @ORM\Column(name="genre_id", type="integer")
-     */
-    private $genreId;
-
-    /**
      * @var string
      *
      * @Serializer\Type("string")
@@ -52,30 +43,6 @@ class Genre
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set genreId.
-     *
-     * @param int $genreId
-     *
-     * @return Genre
-     */
-    public function setGenreId($genreId)
-    {
-        $this->genreId = $genreId;
-
-        return $this;
-    }
-
-    /**
-     * Get genreId.
-     *
-     * @return int
-     */
-    public function getGenreId()
-    {
-        return $this->genreId;
     }
 
     /**
