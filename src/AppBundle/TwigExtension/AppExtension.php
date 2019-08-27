@@ -23,6 +23,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('loadImage', [$this, 'loadImage']),
+            new TwigFunction('imdbLink', [$this, 'imdbLinkBuilder'])
         ];
     }
 
@@ -33,5 +34,10 @@ class AppExtension extends AbstractExtension
             $imageUrl = '/ft8IqAGFs3V7i87z0t0EVRUjK1p.jpg';
         }
         return $this->requestService->getImageUrl($imageUrl);
+    }
+
+    public function imdbLinkBuilder(?string $imdbId)
+    {
+       return $this->requestService->getImdbUrl($imdbId);
     }
 }
