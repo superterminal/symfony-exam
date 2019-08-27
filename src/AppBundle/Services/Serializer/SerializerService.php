@@ -38,33 +38,15 @@ class SerializerService implements SerializerServiceInterface
      * @param string $format
      * @return array
      */
-    public function deserializeMovies($data, $entity, $format = 'json')
+    public function deserializeData($data, $entity, $format = 'json')
     {
-        $movies = [];
+        $mainData = [];
         $type = 'AppBundle\Entity\\' . $entity;
 
-        foreach ($data as $movie) {
-            $movies[] = $this->serializer->deserialize(json_encode($movie), $type, $format);
+        foreach ($data as $currentData) {
+            $mainData[] = $this->serializer->deserialize(json_encode($currentData), $type, $format);
         }
 
-        return $movies;
-    }
-
-    /**
-     * @param $data
-     * @param $entity
-     * @param string $format
-     * @return array
-     */
-    public function deserializeGenres($data, $entity, $format = 'json')
-    {
-        $genres = [];
-        $type = 'AppBundle\Entity\\' . $entity;
-
-        foreach ($data as $genre) {
-            $genres[] = $this->serializer->deserialize(json_encode($genre), $type, $format);
-        }
-
-        return $genres;
+        return $mainData;
     }
 }

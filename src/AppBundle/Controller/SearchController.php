@@ -70,7 +70,7 @@ class SearchController extends Controller
 
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
-        $movies = $this->serializerService->deserializeMovies($moviesAsArray, 'Movie');
+        $movies = $this->serializerService->deserializeData($moviesAsArray, 'Movie');
 
         $paginatedMovies = $this->paginatorService->paginate(
             $movies,

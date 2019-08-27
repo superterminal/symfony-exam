@@ -17,7 +17,8 @@ class BrowseType extends AbstractType
         $builder
             ->add('orderBy')
             ->add('genre')
-            ->add('releaseYear');
+            ->add('releaseYear')
+            ->add('language');
     }
 
     /**

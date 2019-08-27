@@ -46,7 +46,8 @@ class BrowseController extends Controller
     public function indexAction()
     {
         return $this->render('browse/browse.html.twig', [
-            'genres' => $this->getGenres()
+            'genres' => $this->getGenres(),
+            'languages' => $this->getLanguages()
         ]);
     }
 
@@ -64,32 +65,34 @@ class BrowseController extends Controller
 
         return $this->redirectToRoute('browse_results', [
             'orderBy' => $form->getData()->getOrderBy(),
-            'genre' => $form->getData()->getGenre() === null ? '\\' : $form->getData()->getGenre(),
-            'releaseYear' => $form->getData()->getReleaseYear()
+            'genre' => $form->getData()->getGenre() == null ? '\\' : $form->getData()->getGenre(),
+            'releaseYear' => $form->getData()->getReleaseYear() == null ? '\\' : $form->getData()->getReleaseYear(),
+            'language' => $form->getData()->getLanguage() == 'xx' ? '\\' : $form->getData()->getLanguage()
         ]);
     }
 
     /**
-     * @Route("/browse/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}", name="browse_results", methods={"GET", "POST"})
+     * @Route("/browse/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}&lang={language}", name="browse_results", methods={"GET", "POST"})
      *
      * @param Request $request
      * @param null $orderBy
      * @param null $genre
+     * @param $language
      * @param null $releaseYear
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchResults(Request $request, $orderBy, $genre, $releaseYear = null)
+    public function searchResults(Request $request, $orderBy, $genre, $releaseYear, $language)
     {
-        $resultFromApi = $this->requestService->getByFilters($orderBy, $genre, $releaseYear, $this->container);
+        $resultFromApi = $this->requestService->getByFilters($orderBy, $genre, $releaseYear, $language, $this->container);
 
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
-        $movies = $this->serializerService->deserializeMovies($moviesAsArray, 'Movie');
+        $movies = $this->serializerService->deserializeData($moviesAsArray, 'Movie');
 
         $paginatedMovies = $this->paginatorService->paginate(
             $movies,
             $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 3)
+            $request->query->getInt('limit', 6)
         );
 
         return $this->render('browse/results.html.twig', [
@@ -109,8 +112,16 @@ class BrowseController extends Controller
 
         $genresAsArr = $this->serializerService->deserialize($genres, 'Page')->getGenres();
 
-        $genres = $this->serializerService->deserializeGenres($genresAsArr, 'Genre');
+        return $this->serializerService->deserializeData($genresAsArr, 'Genre');
+    }
 
-        return $genres;
+
+    public function getLanguages()
+    {
+        $languages = $this->requestService->getLanguages($this->container);
+
+        $languagesAsArr = $this->serializerService->deserializeData(json_decode($languages), 'Language');
+
+        return $languagesAsArr;
     }
 }

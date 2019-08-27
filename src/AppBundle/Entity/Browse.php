@@ -42,6 +42,13 @@ class Browse
      */
     private $releaseYear;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="language", type="string", length=255)
+     */
+    private $language;
+
 
     /**
      * Get id.
@@ -100,5 +107,21 @@ class Browse
     public function setReleaseYear(string $releaseYear): void
     {
         $this->releaseYear = $releaseYear;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     */
+    public function setLanguage(string $language): void
+    {
+        $this->language = $language;
     }
 }

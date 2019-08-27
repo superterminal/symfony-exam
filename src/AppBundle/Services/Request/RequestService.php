@@ -3,6 +3,7 @@
 
 namespace AppBundle\Services\Request;
 
+use Circle\RestClientBundle\Services\RestClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -18,6 +19,8 @@ class RequestService extends Controller implements RequestServiceInterface
     const DISCOVER_BASE_URL = 'https://api.themoviedb.org/3/discover/movie';
 
     const GENRE_BASE_URL = 'https://api.themoviedb.org/3/genre/movie/list';
+
+    const LANGUAGES_BASE_URL = 'https://api.themoviedb.org/3/configuration/languages';
 
     const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
@@ -67,7 +70,7 @@ class RequestService extends Controller implements RequestServiceInterface
         return $restClient->get($url)->getContent();
     }
 
-    public function getByFilters($orderBy, $genre, $releaseYear, $container)
+    public function getByFilters($orderBy, $genre, $releaseYear, $language, $container)
     {
         $restClient = $container->get('circle.restclient');
 
@@ -75,8 +78,17 @@ class RequestService extends Controller implements RequestServiceInterface
             $genre = '';
         }
 
-        $url = self::DISCOVER_BASE_URL . "?api_key" . self::API_KEY . "&sort_by=$orderBy&primary_release_year=$releaseYear&&with_genres=$genre";
+        if ($releaseYear == '\\') {
+            $releaseYear = '';
+        }
 
+        if ($language == '\\') {
+            $language = '';
+        }
+
+        $url = self::DISCOVER_BASE_URL . "?api_key=" . self::API_KEY . "&sort_by=$orderBy&primary_release_year=$releaseYear&with_genres=$genre&with_original_language=$language";
+
+        var_dump($url);
 
         return $restClient->get($url)->getContent();
     }
@@ -86,6 +98,16 @@ class RequestService extends Controller implements RequestServiceInterface
         $restClient = $container->get('circle.restclient');
 
         $url = self::GENRE_BASE_URL . "?api_key=" . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
+    public function getLanguages($container)
+    {
+        /** @var RestClient $restClient */
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::LANGUAGES_BASE_URL . "?api_key=" . self::API_KEY;
 
         return $restClient->get($url)->getContent();
     }

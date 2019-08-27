@@ -12,6 +12,7 @@ interface RequestServiceInterface
     public function getImageUrl(string $imageUrl);
     public function getTrendingMoviesByDay($container);
     public function getByMovieId(int $id, $container);
-    public function getByFilters(string $orderBy,string $genre, string $releaseYear, $container);
+    public function getByFilters(string $orderBy,string $genre, string $releaseYear, string $language, $container);
     public function getGenres($container);
+    public function getLanguages($container);
 }
