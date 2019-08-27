@@ -89,11 +89,11 @@ class Movie
     private $runtime;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @Serializer\Type("datetime")
+     * @Serializer\Type("string")
      *
-     * @ORM\Column(name="release_date", type="datetime")
+     * @ORM\Column(name="release_date", type="string")
      */
     private $releaseDate;
 
@@ -338,7 +338,7 @@ class Movie
      */
     public function getRevenue()
     {
-        return $this->revenue;
+        return number_format($this->revenue, 0, '.', ',');
     }
 
     /**
@@ -410,7 +410,11 @@ class Movie
      */
     public function getSpokenLanguages()
     {
-        return $this->spokenLanguages;
+        $langs = [];
+        foreach ($this->spokenLanguages as $spokenLanguage) {
+            $langs[] = $spokenLanguage['name'];
+        }
+        return implode(', ', $langs);
     }
 
     /**
@@ -526,11 +530,16 @@ class Movie
     /**
      * Get genres.
      *
-     * @return array
+     * @return string
      */
     public function getGenres()
     {
-        return $this->genres;
+        $genres = [];
+        foreach ($this->genres as $genre) {
+            $genres[] =  $genre['name'];
+        }
+
+        return implode(", ", $genres);
     }
 
     /**
@@ -598,11 +607,11 @@ class Movie
     }
 
     /**
-     * @return float
+     * @return float|int
      */
-    public function getBudget(): float
+    public function getBudget()
     {
-        return $this->budget;
+        return number_format($this->budget, 0, '.', ',');
     }
 
     /**

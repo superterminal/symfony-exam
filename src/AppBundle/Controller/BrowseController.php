@@ -102,7 +102,6 @@ class BrowseController extends Controller
         ]);
     }
 
-
     /**
      * @return mixed
      */
@@ -115,7 +114,9 @@ class BrowseController extends Controller
         return $this->serializerService->deserializeData($genresAsArr, 'Genre');
     }
 
-
+    /**
+     * @return mixed
+     */
     public function getLanguages()
     {
         $languages = $this->requestService->getLanguages($this->container);

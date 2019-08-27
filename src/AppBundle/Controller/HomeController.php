@@ -51,7 +51,7 @@ class HomeController extends Controller
 
         $moviesAsArray = $this->serializerService->deserialize($trendingMovies, 'Page')->getResults();
 
-        $movies = $this->serializerService->deserializeMovies($moviesAsArray, 'Movie');
+        $movies = $this->serializerService->deserializeData($moviesAsArray, 'Movie');
 
         /** @var Paginator $paginator */
         $paginatedMovies = $this->paginatorService->paginate(
