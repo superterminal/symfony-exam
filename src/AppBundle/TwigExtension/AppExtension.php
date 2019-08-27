@@ -29,10 +29,6 @@ class AppExtension extends AbstractExtension
 
     public function loadImage(?string $imageUrl)
     {
-        //TO DO - insert default image when no poster_url is provided
-        if (null === $imageUrl) {
-            $imageUrl = '/ft8IqAGFs3V7i87z0t0EVRUjK1p.jpg';
-        }
         return $this->requestService->getImageUrl($imageUrl);
     }
 

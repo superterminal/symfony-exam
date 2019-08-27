@@ -593,7 +593,7 @@ class Movie
     /**
      * @return string
      */
-    public function getHomepage(): string
+    public function getHomepage(): ?string
     {
         return $this->homepage;
     }

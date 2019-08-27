@@ -26,6 +26,8 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const IMDB_BASE_URL = 'https://www.imdb.com/title/';
 
+    const NO_PHOTO_URL = 'https://stjohnscountybar.com/wp-content/uploads/2019/04/download.png';
+
     const API_KEY = '09d9101382d79a2be4f6c5081fb53919';
 
 
@@ -50,8 +52,12 @@ class RequestService extends Controller implements RequestServiceInterface
      * @param string $imageUrl
      * @return string
      */
-    public function getImageUrl(string $imageUrl)
+    public function getImageUrl(?string $imageUrl)
     {
+        if (null === $imageUrl) {
+            return self::NO_PHOTO_URL;
+        }
+
         $url = self::BASE_IMAGE_URL . $imageUrl;
 
         return $url;
@@ -80,8 +86,6 @@ class RequestService extends Controller implements RequestServiceInterface
         $restClient = $container->get('circle.restclient');
 
         $url = self::GET_BY_ID_BASE_URL . $id . "?api_key=" . self::API_KEY;
-
-        var_dump($url);
 
         return $restClient->get($url)->getContent();
     }
