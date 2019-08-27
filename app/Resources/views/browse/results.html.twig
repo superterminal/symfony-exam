@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             {% for movie in result %}
-                <div class="col-md-4">
+                <div class="col-md-4" style="padding: 15px;">
                     <a href="{{ path('view_movie', {id: movie.id}) }}">
                         {{ movie.originalTitle }}<br>
                         <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px">
