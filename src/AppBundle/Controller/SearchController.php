@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Movie;
 use AppBundle\Entity\Search;
 use AppBundle\Form\SearchType;
 use AppBundle\Services\Paginator\PaginatorServiceInterface;
@@ -51,7 +52,6 @@ class SearchController extends Controller
         $form = $this->createForm(SearchType::class, $search);
         $form->handleRequest($request);
 
-
         return $this->redirectToRoute('search_results', [
             'query' => $form->getData()->getInput()
         ]);
@@ -71,6 +71,10 @@ class SearchController extends Controller
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
         $movies = $this->serializerService->deserializeData($moviesAsArray, 'Movie');
+
+        usort($movies, function(Movie $a, Movie $b) use($movies) {
+           return $b->getReleaseDate() <=> $a->getReleaseDate();
+        });
 
         $paginatedMovies = $this->paginatorService->paginate(
             $movies,

@@ -1,21 +1,45 @@
 {% extends 'base.html.twig' %}
 
+{% set imageUrl = loadImage(movie.posterPath) %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('css/movies/view.css') }}">
+{% endblock %}
+
 {% block main %}
 
-    <h1>add more properties for display</h1>
-    <div class="col-md-12">
-        <article style="text-align: center">
+    <div class="container">
 
-            <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px"><br>
-            <h2>{{ movie.originalTitle }}</h2>
-            <h4>{{ movie.id }}</h4>
-            <small>Date added: </small>
-{#            <small>Date Added: {{ movie.releaseDate|date('Y-m-d') }}</small>#}
+        <div class="col-md-4 pic-container">
+            <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
+            <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
+            <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
+            <a href="{{ youtubeLink(trailerKey) }}" class="pic-caption" target="_blank">Watch trailer here!</a>
+        </div>
+        <div class="col-md-8">
+            <h1>{{ movie.originalTitle }}</h1>
+            {% if movie.tagline %}
+            <h5>"{{ movie.tagline }}"</h5>
+            {% endif %}
+            <h4>Status: {{ movie.status }}</h4>
+            <h4>Release date: {{ movie.releaseDate }}</h4>
+            <h4>Genres: {{ movie.genres }}</h4>
+            <h4>Spoken languages: {{ movie.spokenLanguages }}</h4>
+            <h4>Homepage: <a href="{{ movie.homepage }}">{{ movie.homepage }}</a></h4>
+            <h4>IMDb link: <a href="{{ imdbLink(movie.imdbId) }}">{{ imdbLink(movie.imdbId) }}</a> </h4>
+            <h4>Runtime: {{ movie.runtime }} minutes</h4>
 
-        </article>
-        <h4>{{ movie.overview }}</h4>
+            <h4>Budget: {{ movie.budget }}</h4>
+            <h4>Revenue: {{ movie.revenue }}</h4>
+
+            <h4>{{ movie.overview }}</h4>
+
+        <a class="btn btn-default btn-xs" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
+        </div>
+
     </div>
 
-    <a class="btn btn-default btn-xs" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
 
 {% endblock %}

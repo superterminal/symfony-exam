@@ -55,6 +55,7 @@
                 </select>
                 <label class="col-sm-1 control-label" for="releaseYear">Language</label>
                 <select class="form-control" id="order" name="browse[language]">
+                    <option value="en" selected>English</option>
                     {% for language in languages %}
                         <option value="{{ language.getIso6391 }}">{{ language.englishName}}</option>
                     {% endfor %}

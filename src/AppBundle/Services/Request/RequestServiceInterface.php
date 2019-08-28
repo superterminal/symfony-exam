@@ -16,4 +16,6 @@ interface RequestServiceInterface
     public function getGenres($container);
     public function getLanguages($container);
     public function getImdbUrl($imdbId);
+    public function getVideoData($id, $container);
+    public function getVideoUrl(string $key);
 }

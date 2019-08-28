@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Video;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,8 +42,21 @@ class MovieController extends Controller
 
         $mappedMovie = $this->serializerService->deserialize($movie, 'Movie');
 
+        $videoData = json_decode($this->requestService->getVideoData($id, $this->container), true)['results'];
+        $videos = $this->serializerService->deserializeData($videoData, 'Video');
+        $trailerKey = '';
+
+        /** @var Video $video */
+        foreach ($videos as $video) {
+            if ($video->getSite() === 'YouTube' && $video->getType() == 'Trailer') {
+                $trailerKey = $video->getKey();
+                break;
+            }
+        }
+
         return $this->render('movies/view.html.twig', [
-            'movie' => $mappedMovie
+            'movie' => $mappedMovie,
+            'trailerKey' => $trailerKey
         ]);
     }
 }

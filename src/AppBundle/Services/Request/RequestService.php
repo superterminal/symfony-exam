@@ -28,6 +28,8 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const NO_PHOTO_URL = 'https://stjohnscountybar.com/wp-content/uploads/2019/04/download.png';
 
+    const YOUTUBE_BASE_URL = 'https://www.youtube.com/watch?v=';
+
     const API_KEY = '09d9101382d79a2be4f6c5081fb53919';
 
 
@@ -153,5 +155,19 @@ class RequestService extends Controller implements RequestServiceInterface
     public function getImdbUrl($imdbId)
     {
         return self::IMDB_BASE_URL . "$imdbId/";
+    }
+
+    public function getVideoData($id, $container)
+    {
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::GET_BY_ID_BASE_URL . $id . "/videos?api_key=" . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
+    public function getVideoUrl(string $key)
+    {
+        return self::YOUTUBE_BASE_URL . $key;
     }
 }
