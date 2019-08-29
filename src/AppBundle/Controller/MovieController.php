@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Video;
+use AppBundle\Services\Comment\CommentServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,13 +23,24 @@ class MovieController extends Controller
      */
     private $serializerService;
 
+    /**
+     * @var CommentServiceInterface
+     */
+    private $commentService;
 
-    public function __construct(RequestServiceInterface $requestService,
-                                SerializerServiceInterface $serializerService)
+    /**
+     * MovieController constructor.
+     * @param RequestServiceInterface $requestService
+     * @param SerializerServiceInterface $serializerService
+     * @param CommentServiceInterface $commentService
+     */
+    public function __construct(RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, CommentServiceInterface $commentService)
     {
         $this->requestService = $requestService;
         $this->serializerService = $serializerService;
+        $this->commentService = $commentService;
     }
+
 
     /**
      * @Route("/movies/view/{id}", name="view_movie", methods={"GET"})
@@ -46,6 +58,8 @@ class MovieController extends Controller
         $videos = $this->serializerService->deserializeData($videoData, 'Video');
         $trailerKey = '';
 
+        $comments = $this->commentService->getAllByMovieId($id);
+
         /** @var Video $video */
         foreach ($videos as $video) {
             if ($video->getSite() === 'YouTube' && $video->getType() == 'Trailer') {
@@ -56,7 +70,8 @@ class MovieController extends Controller
 
         return $this->render('movies/view.html.twig', [
             'movie' => $mappedMovie,
-            'trailerKey' => $trailerKey
+            'trailerKey' => $trailerKey,
+            'comments' => $comments
         ]);
     }
 }

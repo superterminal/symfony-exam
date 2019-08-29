@@ -73,7 +73,7 @@ class SearchController extends Controller
         $movies = $this->serializerService->deserializeData($moviesAsArray, 'Movie');
 
         usort($movies, function(Movie $a, Movie $b) use($movies) {
-           return $b->getReleaseDate() <=> $a->getReleaseDate();
+           return $b->getPopularity() <=> $a->getPopularity();
         });
 
         $paginatedMovies = $this->paginatorService->paginate(
