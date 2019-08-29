@@ -12,34 +12,73 @@
 
     <div class="container">
 
+        {% for msg in app.flashes('message') %}
+            <div class="alert alert-success">
+                {{ msg }}
+            </div>
+        {% endfor %}
+
         <div class="col-md-4 pic-container">
             <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
             <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
             <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
-            <a href="{{ youtubeLink(trailerKey) }}" class="pic-caption" target="_blank">Watch trailer here!</a>
+            {% if trailerKey %}
+                <a href="{{ youtubeLink(trailerKey) }}" class="pic-caption" target="_blank">Watch trailer here!</a>
+            {% endif %}
         </div>
         <div class="col-md-8">
             <h1>{{ movie.originalTitle }}</h1>
             {% if movie.tagline %}
-            <h5>"{{ movie.tagline }}"</h5>
+                <h5>"{{ movie.tagline }}"</h5>
             {% endif %}
             <h4>Status: {{ movie.status }}</h4>
             <h4>Release date: {{ movie.releaseDate }}</h4>
             <h4>Genres: {{ movie.genres }}</h4>
             <h4>Spoken languages: {{ movie.spokenLanguages }}</h4>
-            <h4>Homepage: <a href="{{ movie.homepage }}">{{ movie.homepage }}</a></h4>
+            {% if movie.homepage %}
+                <h4>Homepage: <a href="{{ movie.homepage }}">{{ movie.homepage }}</a></h4>
+            {% endif %}
             <h4>IMDb link: <a href="{{ imdbLink(movie.imdbId) }}">{{ imdbLink(movie.imdbId) }}</a> </h4>
             <h4>Runtime: {{ movie.runtime }} minutes</h4>
 
-            <h4>Budget: {{ movie.budget }}</h4>
-            <h4>Revenue: {{ movie.revenue }}</h4>
+            {% if movie.budget %}
+                <h4>Budget: {{ movie.budget }}</h4>
+            {% endif %}
+            {% if movie.revenue %}
+                <h4>Revenue: {{ movie.revenue }}</h4>
+            {% endif %}
 
             <h4>{{ movie.overview }}</h4>
 
         <a class="btn btn-default btn-xs" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
+
+        <form method="post" action="{{ path('comment_create', {id: movie.id}) }}">
+            <div class="form-group">
+                <div class="col-sm-6">
+                Add comment: <textarea class="form-control" rows="6" id="article_content"
+                          name="comment[content]"></textarea>
+                    <input type="submit" value="Add" class="btn btn-success btn-sm">
+                </div>
+            </div>
+
+        </form>
         </div>
 
+
     </div>
+
+    {% for comment in comments %}
+        <div style="border: 2px solid #0a4b3e">
+            <p>{{ comment.content }}</p>
+            <small>{{ comment.dateAdded|date("F js \\a\\t g:ia") }}</small>
+            {#                <a href="{{ path('user_message', {id: comment.author.id}) }}">#}
+            {#                    <img class="img-rounded" src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" width="30px" height="10px">#}
+            {#                </a>#}
+            <hr>
+        </div>
+    {% endfor %}
+
+
 
 
 {% endblock %}

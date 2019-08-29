@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/movies/search_view.css') }}">
+    <link rel="stylesheet" href="{{ asset('js/imageEffect.js') }}">
+{% endblock %}
+
 {% block main %}
 
     Total items: {{ result.getTotalItemCount }} <br>
@@ -7,10 +13,10 @@
     <div class="container">
         <div class="row">
             {% for movie in result %}
-                <div class="col-md-4">
+                <div class="col-md-4 container">
                     <a href="{{ path('view_movie', {id: movie.id}) }}">
                         {{ movie.originalTitle }}<br>
-                        <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px">
+                        <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px" class="img-responsive">
                     </a>
                 </div>
             {% endfor %}
