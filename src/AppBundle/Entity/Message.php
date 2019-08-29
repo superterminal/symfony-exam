@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Comment
+ * Message
  *
- * @ORM\Table(name="comments")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CommentRepository")
+ * @ORM\Table(name="message")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MessageRepository")
  */
-class Comment
+class Message
 {
     /**
      * @var int
@@ -24,16 +24,16 @@ class Comment
     /**
      * @var string
      *
+     * @ORM\Column(name="about", type="string", length=255)
+     */
+    private $about;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="content", type="text")
      */
     private $content;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="movie_id", type="integer")
-     */
-    private $movie_id;
 
     /**
      * @var \DateTime
@@ -43,17 +43,12 @@ class Comment
     private $dateAdded;
 
     /**
-     * @var string
+     * @var bool
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="comments")
+     * @ORM\Column(name="isSeen", type="boolean")
      */
-    private $author;
+    private $isSeen;
 
-
-    public function __construct()
-    {
-        $this->dateAdded = new \DateTime('now');
-    }
 
     /**
      * Get id.
@@ -66,11 +61,35 @@ class Comment
     }
 
     /**
+     * Set about.
+     *
+     * @param string $about
+     *
+     * @return Message
+     */
+    public function setAbout($about)
+    {
+        $this->about = $about;
+
+        return $this;
+    }
+
+    /**
+     * Get about.
+     *
+     * @return string
+     */
+    public function getAbout()
+    {
+        return $this->about;
+    }
+
+    /**
      * Set content.
      *
      * @param string $content
      *
-     * @return Comment
+     * @return Message
      */
     public function setContent($content)
     {
@@ -94,7 +113,7 @@ class Comment
      *
      * @param \DateTime $dateAdded
      *
-     * @return Comment
+     * @return Message
      */
     public function setDateAdded($dateAdded)
     {
@@ -114,37 +133,26 @@ class Comment
     }
 
     /**
-     * @return string|object
+     * Set isSeen.
+     *
+     * @param bool $isSeen
+     *
+     * @return Message
      */
-    public function getAuthor()
+    public function setIsSeen($isSeen)
     {
-        return $this->author;
-    }
-
-    /**
-     * @param User $author
-     * @return Comment
-     */
-    public function setAuthor(User $author)
-    {
-        $this->author = $author;
+        $this->isSeen = $isSeen;
 
         return $this;
     }
 
     /**
-     * @return int
+     * Get isSeen.
+     *
+     * @return bool
      */
-    public function getMovieId(): int
+    public function getIsSeen()
     {
-        return $this->movie_id;
-    }
-
-    /**
-     * @param int $movie_id
-     */
-    public function setMovieId(int $movie_id): void
-    {
-        $this->movie_id = $movie_id;
+        return $this->isSeen;
     }
 }

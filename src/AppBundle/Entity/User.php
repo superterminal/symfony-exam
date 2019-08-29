@@ -59,6 +59,13 @@ class User implements UserInterface
     private $image;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_joined", type="datetime")
+     */
+    private $dateJoined;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role")
@@ -77,6 +84,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="author")
      */
     private $comments;
+
+    public function __construct()
+    {
+        $this->dateJoined = new \DateTime('now');
+    }
 
     /**
      * Get id
@@ -199,6 +211,39 @@ class User implements UserInterface
     {
         return $this->image;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateJoined(): \DateTime
+    {
+        return $this->dateJoined;
+    }
+
+    /**
+     * @param \DateTime $dateJoined
+     */
+    public function setDateJoined(\DateTime $dateJoined): void
+    {
+        $this->dateJoined = $dateJoined;
+    }
+
+    /**
+     * @return Comment[]|ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment[]|ArrayCollection $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
+    }
+
 
     public function getSalt()
     {
