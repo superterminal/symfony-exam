@@ -70,6 +70,14 @@ class User implements UserInterface
      */
     private $roles;
 
+
+    /**
+     * @var ArrayCollection|Comment[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="author")
+     */
+    private $comments;
+
     /**
      * Get id
      *

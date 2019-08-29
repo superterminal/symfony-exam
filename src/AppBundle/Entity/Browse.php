@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Browse
  *
- * @ORM\Table(name="browse")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BrowseRepository")
  */
 class Browse

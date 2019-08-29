@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -9,7 +10,6 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * Movie
  *
- * @ORM\Table(name="movie")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MovieRepository")
  */
 class Movie
@@ -186,6 +186,23 @@ class Movie
      * @ORM\Column(name="budget", type="float")
      */
     private $budget;
+
+    /**
+     * @var string
+     *
+     * @Serializer\Type("string")
+     *
+     * @ORM\Column(name="popularity", type="string")
+     */
+    private $popularity;
+
+
+    /**
+     * @var ArrayCollection|Comment[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="movie")
+     */
+    private $comments;
 
     /**
      * Get id.
@@ -622,5 +639,35 @@ class Movie
         $this->budget = $budget;
     }
 
+    /**
+     * @return string
+     */
+    public function getPopularity(): string
+    {
+        return $this->popularity;
+    }
 
+    /**
+     * @param string $popularity
+     */
+    public function setPopularity(string $popularity): void
+    {
+        $this->popularity = $popularity;
+    }
+
+    /**
+     * @return Comment[]|ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment[]|ArrayCollection $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
+    }
 }

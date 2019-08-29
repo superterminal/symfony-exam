@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * TrendingMovie
  *
- * @ORM\Table(name="trending_movie")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TrendingMovieRepository")
  */
 class TrendingMovie
@@ -19,8 +18,7 @@ class TrendingMovie
      * @Serializer\Type("integer")
      *
      * @ORM\Column(name="id", type="integer")
-//     * @ORM\Id
-//     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id
      */
     private $id;
 

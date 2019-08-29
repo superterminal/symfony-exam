@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * Video
  *
- * @ORM\Table(name="video")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\VideoRepository")
  */
 class Video
@@ -17,7 +16,7 @@ class Video
      * @var int
      *
      * @Serializer\Type("int")
-     *
+     * @ORM\Id
      * @ORM\Column(name="id", type="integer")
      */
     private $id;

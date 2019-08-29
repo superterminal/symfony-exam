@@ -9,7 +9,6 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * Genre
  *
- * @ORM\Table(name="genre")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GenreRepository")
  */
 class Genre

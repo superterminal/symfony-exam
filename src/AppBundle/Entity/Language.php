@@ -8,11 +8,20 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * Language
  *
- * @ORM\Table(name="language")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\LanguageRepository")
  */
 class Language
 {
+
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     */
+    private $id;
+
 
     /**
      * @var string

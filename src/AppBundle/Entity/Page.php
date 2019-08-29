@@ -9,7 +9,6 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * Page
  *
- * @ORM\Table(name="page")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PageRepository")
  */
 class Page
