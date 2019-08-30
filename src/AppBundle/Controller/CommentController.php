@@ -7,6 +7,7 @@ use AppBundle\Form\CommentType;
 use AppBundle\Services\Comment\CommentServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
+use AppBundle\Services\Users\UserServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,16 +32,23 @@ class CommentController extends Controller
     private $serializerService;
 
     /**
+     * @var UserServiceInterface
+     */
+    private $userService;
+
+    /**
      * CommentController constructor.
      * @param CommentServiceInterface $commentService
      * @param RequestServiceInterface $requestService
      * @param SerializerServiceInterface $serializerService
+     * @param UserServiceInterface $userService
      */
-    public function __construct(CommentServiceInterface $commentService, RequestServiceInterface $requestService, SerializerServiceInterface $serializerService)
+    public function __construct(CommentServiceInterface $commentService, RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, UserServiceInterface $userService)
     {
         $this->commentService = $commentService;
         $this->requestService = $requestService;
         $this->serializerService = $serializerService;
+        $this->userService = $userService;
     }
 
     /**
@@ -66,4 +74,20 @@ class CommentController extends Controller
             'id' => $id
         ]);
     }
+
+    /**
+     * @Route("/user/{id}/message", name="user_message", methods={"GET"})
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function addUserMessage($id)
+    {
+        return $this->render("users/message.html.twig", [
+            'user' => $this->userService->findOneById($id)
+        ]);
+    }
+
 }
