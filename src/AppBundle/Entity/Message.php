@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Message
  *
- * @ORM\Table(name="message")
+ * @ORM\Table(name="messages")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MessageRepository")
  */
 class Message
@@ -38,17 +38,37 @@ class Message
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="dateAdded", type="datetime")
+     * @ORM\Column(name="date_added", type="datetime")
      */
     private $dateAdded;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="isSeen", type="boolean")
+     * @ORM\Column(name="is_seen", type="boolean")
      */
     private $isSeen;
 
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="senderMessages")
+     */
+    private $sender;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="recipientMessages")
+     */
+    private $recipient;
+
+
+    public function __construct()
+    {
+        $this->dateAdded = new \DateTime('now');
+        $this->isSeen = false;
+    }
 
     /**
      * Get id.
@@ -154,5 +174,43 @@ class Message
     public function getIsSeen()
     {
         return $this->isSeen;
+    }
+
+    /**
+     * @return User
+     */
+    public function getSender(): User
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @param User $sender
+     * @return Message
+     */
+    public function setSender(User $sender)
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getRecipient(): User
+    {
+        return $this->recipient;
+    }
+
+    /**
+     * @param User $recipient
+     * @return Message
+     */
+    public function setRecipient(User $recipient)
+    {
+        $this->recipient = $recipient;
+
+        return $this;
     }
 }

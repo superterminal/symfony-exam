@@ -85,6 +85,21 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @var ArrayCollection|Message[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Message", mappedBy="sender")
+     */
+    private $senderMessages;
+
+    /**
+     * @var ArrayCollection|Message[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Message", mappedBy="recipient")
+     */
+    private $recipientMessages;
+
+
     public function __construct()
     {
         $this->dateJoined = new \DateTime('now');
@@ -244,6 +259,38 @@ class User implements UserInterface
         $this->comments = $comments;
     }
 
+    /**
+     * @return Message[]|ArrayCollection
+     */
+    public function getSenderMessages()
+    {
+        return $this->senderMessages;
+    }
+
+    /**
+     * @param Message[]|ArrayCollection $senderMessages
+     */
+    public function setSenderMessages($senderMessages): void
+    {
+        $this->senderMessages = $senderMessages;
+    }
+
+    /**
+     * @return Message[]|ArrayCollection
+     */
+    public function getRecipientMessages()
+    {
+        return $this->recipientMessages;
+    }
+
+    /**
+     * @param Message[]|ArrayCollection $recipientMessages
+     */
+    public function setRecipientMessages($recipientMessages): void
+    {
+        $this->recipientMessages = $recipientMessages;
+    }
+    
 
     public function getSalt()
     {
