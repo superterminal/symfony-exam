@@ -31,7 +31,7 @@ class Watched
     /**
      * @var string
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="watched")
      */
     private $author;
 
