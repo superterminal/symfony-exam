@@ -99,6 +99,20 @@ class User implements UserInterface
      */
     private $recipientMessages;
 
+    /**
+     * @var int
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Unwatched", mappedBy="author")
+     */
+    private $unwatched;
+
+    /**
+     * @var int
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Watched", mappedBy="author")
+     */
+    private $watched;
+
 
     public function __construct()
     {
@@ -290,7 +304,38 @@ class User implements UserInterface
     {
         $this->recipientMessages = $recipientMessages;
     }
-    
+
+    /**
+     * @return int
+     */
+    public function getUnwatched(): int
+    {
+        return $this->unwatched;
+    }
+
+    /**
+     * @param int $unwatched
+     */
+    public function setUnwatched(int $unwatched): void
+    {
+        $this->unwatched = $unwatched;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWatched(): int
+    {
+        return $this->watched;
+    }
+
+    /**
+     * @param int $watched
+     */
+    public function setWatched(int $watched): void
+    {
+        $this->watched = $watched;
+    }
 
     public function getSalt()
     {
