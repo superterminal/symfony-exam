@@ -18,6 +18,12 @@
             </div>
         {% endfor %}
 
+        {% for msg in app.flashes('list') %}
+            <div class="alert alert-warning">
+                {{ msg }}
+            </div>
+        {% endfor %}
+
         <div class="col-md-4 pic-container">
             <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
             <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
@@ -50,7 +56,9 @@
 
             <h4>{{ movie.overview }}</h4>
 
-        <a class="btn btn-default btn-xs" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
+            <a class="btn btn-default btn-m" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
+            <a class="btn btn-success btn-m" href="{{ path('add_to_unwatched', {id: movie.id}) }}">Add to unwatched</a>
+            <a class="btn btn-warning btn-m" href="{{ path('add_to_watched', {id: movie.id}) }}">I have watched it already</a>
 
         <form method="post" action="{{ path('comment_create', {id: movie.id}) }}">
             <div class="form-group">
@@ -71,9 +79,9 @@
         <div style="border: 2px solid #0a4b3e">
             <p>{{ comment.content }}</p>
             <small>{{ comment.dateAdded|date("F js \\a\\t g:ia") }}</small>
-                            <a href="{{ path('user_message', {id: comment.author.id}) }}">
-                                <img class="img-rounded" src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" width="30px" height="10px">
-                            </a>
+                <a href="{{ path('user_message', {id: comment.author.id}) }}">
+                    <img class="img-rounded" src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" width="30px" height="10px">
+                </a>
             <hr>
         </div>
     {% endfor %}
