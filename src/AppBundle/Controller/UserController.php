@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use AppBundle\Services\Message\MessageServiceInterface;
 use AppBundle\Services\Users\UserServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,9 +23,20 @@ class UserController extends Controller
      */
     private $userService;
 
-    public function __construct(UserServiceInterface $userService)
+    /**
+     * @var MessageServiceInterface
+     */
+    private $messageService;
+
+    /**
+     * UserController constructor.
+     * @param UserServiceInterface $userService
+     * @param MessageServiceInterface $messageService
+     */
+    public function __construct(UserServiceInterface $userService, MessageServiceInterface $messageService)
     {
         $this->userService = $userService;
+        $this->messageService = $messageService;
     }
 
     /**
@@ -83,7 +95,8 @@ class UserController extends Controller
     public function profile()
     {
         return $this->render('users/profile.html.twig', [
-            'user' => $this->userService->currentUser()
+            'user' => $this->userService->currentUser(),
+            'msg' => $this->messageService->getAllUnseenByUser()
         ]);
     }
 

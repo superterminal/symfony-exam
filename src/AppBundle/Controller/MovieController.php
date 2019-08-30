@@ -2,10 +2,17 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Unwatched;
 use AppBundle\Entity\Video;
+use AppBundle\Entity\Watched;
+use AppBundle\Repository\UnwatchedRepository;
+use AppBundle\Repository\WatchedRepository;
 use AppBundle\Services\Comment\CommentServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
+use AppBundle\Services\Unwatched\UnwatchedService;
+use AppBundle\Services\Unwatched\UnwatchedServiceInterface;
+use AppBundle\Services\Watched\WatchedServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,16 +36,32 @@ class MovieController extends Controller
     private $commentService;
 
     /**
+     * @var UnwatchedServiceInterface
+     */
+    private $unwatchedService;
+
+    /**
+     * @var WatchedServiceInterface
+     */
+    private $watchedService;
+
+    /**
      * MovieController constructor.
      * @param RequestServiceInterface $requestService
      * @param SerializerServiceInterface $serializerService
      * @param CommentServiceInterface $commentService
+     * @param UnwatchedServiceInterface $unwatchedService
+     * @param WatchedServiceInterface $watchedService
+     * @param UnwatchedRepository $unwatchedRepository
      */
-    public function __construct(RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, CommentServiceInterface $commentService)
+    public function __construct(RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, CommentServiceInterface $commentService, UnwatchedServiceInterface $unwatchedService, WatchedServiceInterface $watchedService, UnwatchedRepository $unwatchedRepository)
     {
         $this->requestService = $requestService;
         $this->serializerService = $serializerService;
         $this->commentService = $commentService;
+        $this->unwatchedService = $unwatchedService;
+        $this->watchedService = $watchedService;
+        $this->unwatchedRepository = $unwatchedRepository;
     }
 
 
@@ -73,5 +96,63 @@ class MovieController extends Controller
             'trailerKey' => $trailerKey,
             'comments' => $comments
         ]);
+    }
+
+
+    /**
+     * @Route("/movies/view/add_to_unwatched/{id}", name="add_to_unwatched", methods={"POST", "GET"})
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addToUnwatched($id)
+    {
+        return $this->addToList('AppBundle\Entity\Unwatched',
+            $id,
+            'Movie added successfully to list: Unwatched',
+            'The movie is in your list already',
+            $this->unwatchedService);
+    }
+
+    /**
+     * @Route("/movies/view/add_to_watched/{id}", name="add_to_watched", methods={"POST", "GET"})
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addToWatched($id)
+    {
+        return $this->addToList('AppBundle\Entity\Watched',
+            $id,
+            'Movie added successfully to list: Watched',
+            'The movie is in your list already',
+            $this->watchedService);
+    }
+
+    /**
+     * @param $method
+     * @param $id
+     * @param $successMessage
+     * @param $failMessage
+     * @param $repository
+     * @param $service
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addToList($method, $id, $successMessage, $failMessage, $service)
+    {
+        $method = new $method();
+
+        $inStorage = $service->inList($id);
+
+        if ($inStorage) {
+            $this->addFlash('list', $failMessage);
+            return $this->redirectToRoute('view_movie', ['id' => $id]);
+        }
+
+        $service->insert($method, $id);
+
+        $this->addFlash('list', $successMessage);
+
+        return $this->redirectToRoute('view_movie', ['id' => $id]);
     }
 }
