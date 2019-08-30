@@ -44,9 +44,9 @@ class SerializerService implements SerializerServiceInterface
         $type = 'AppBundle\Entity\\' . $entity;
 
         foreach ($data as $currentData) {
-            $mainData[] = $this->serializer->deserialize(json_encode($currentData), $type, $format);
+            //here was with json_encode
+            $mainData[] = $this->serializer->deserialize(gettype($data[0]) === 'string' ? $currentData : json_encode($currentData), $type, $format);
         }
-
         return $mainData;
     }
 }

@@ -50,4 +50,11 @@ class WatchedService implements WatchedServiceInterface
         return false;
     }
 
+    public function getAllMoviesByUser()
+    {
+        return $this
+            ->watchedRepository
+            ->findBy(['author' => $this->userService->currentUser()]);
+    }
+
 }

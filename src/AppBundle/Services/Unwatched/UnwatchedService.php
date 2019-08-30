@@ -50,4 +50,11 @@ class UnwatchedService implements UnwatchedServiceInterface
 
         return false;
     }
+
+    public function getAllMoviesByUser()
+    {
+        return $this
+            ->unwatchedRepository
+            ->findBy(['author' => $this->userService->currentUser()]);
+    }
 }
