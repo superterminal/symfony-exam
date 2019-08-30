@@ -52,18 +52,15 @@ class MovieController extends Controller
      * @param CommentServiceInterface $commentService
      * @param UnwatchedServiceInterface $unwatchedService
      * @param WatchedServiceInterface $watchedService
-     * @param UnwatchedRepository $unwatchedRepository
      */
-    public function __construct(RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, CommentServiceInterface $commentService, UnwatchedServiceInterface $unwatchedService, WatchedServiceInterface $watchedService, UnwatchedRepository $unwatchedRepository)
+    public function __construct(RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, CommentServiceInterface $commentService, UnwatchedServiceInterface $unwatchedService, WatchedServiceInterface $watchedService)
     {
         $this->requestService = $requestService;
         $this->serializerService = $serializerService;
         $this->commentService = $commentService;
         $this->unwatchedService = $unwatchedService;
         $this->watchedService = $watchedService;
-        $this->unwatchedRepository = $unwatchedRepository;
     }
-
 
     /**
      * @Route("/movies/view/{id}", name="view_movie", methods={"GET"})

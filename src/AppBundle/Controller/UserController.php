@@ -3,10 +3,17 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Unwatched;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use AppBundle\Services\Message\MessageServiceInterface;
+use AppBundle\Services\Request\RequestServiceInterface;
+use AppBundle\Services\Serializer\SerializerServiceInterface;
+use AppBundle\Services\Unwatched\UnwatchedService;
+use AppBundle\Services\Unwatched\UnwatchedServiceInterface;
 use AppBundle\Services\Users\UserServiceInterface;
+use AppBundle\Services\Watched\WatchedService;
+use AppBundle\Services\Watched\WatchedServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,15 +36,44 @@ class UserController extends Controller
     private $messageService;
 
     /**
+     * @var WatchedServiceInterface
+     */
+    private $watchedService;
+
+    /**
+     * @var UnwatchedServiceInterface
+     */
+    private $unwatchedService;
+
+    /**
+     * @var RequestServiceInterface
+     */
+    private $requestService;
+
+    /**
+     * @var SerializerServiceInterface
+     */
+    private $serializerService;
+
+    /**
      * UserController constructor.
      * @param UserServiceInterface $userService
      * @param MessageServiceInterface $messageService
+     * @param WatchedServiceInterface $watchedService
+     * @param UnwatchedServiceInterface $unwatchedService
+     * @param RequestServiceInterface $requestService
+     * @param SerializerServiceInterface $serializerService
      */
-    public function __construct(UserServiceInterface $userService, MessageServiceInterface $messageService)
+    public function __construct(UserServiceInterface $userService, MessageServiceInterface $messageService, WatchedServiceInterface $watchedService, UnwatchedServiceInterface $unwatchedService, RequestServiceInterface $requestService, SerializerServiceInterface $serializerService)
     {
         $this->userService = $userService;
         $this->messageService = $messageService;
+        $this->watchedService = $watchedService;
+        $this->unwatchedService = $unwatchedService;
+        $this->requestService = $requestService;
+        $this->serializerService = $serializerService;
     }
+
 
     /**
      * @Route("/register", name="user_register", methods={"GET"})
@@ -96,7 +132,9 @@ class UserController extends Controller
     {
         return $this->render('users/profile.html.twig', [
             'user' => $this->userService->currentUser(),
-            'msg' => $this->messageService->getAllUnseenByUser()
+            'msg' => $this->messageService->getAllUnseenByUser(),
+            'unwatched_movies' => $this->getUnwatchedMovies(),
+            'watched_movies' => $this->watchedService->getAllMoviesByUser()
         ]);
     }
 
@@ -182,5 +220,17 @@ class UserController extends Controller
             $fs->remove($currentImageUrl);
             //unlink('web/uploads/images/users/' . $currentImageUrl);
         }
+    }
+
+    public function getUnwatchedMovies()
+    {
+        $movies = $this->unwatchedService->getAllMoviesByUser();
+
+        $unwatchedMovies = [];
+        foreach ($movies as $movie) {
+            $unwatchedMovies[] = $this->requestService->getByMovieId($movie->getMovieId(), $this->container);
+        }
+
+        return $this->serializerService->deserializeData($unwatchedMovies, 'Movie');
     }
 }
