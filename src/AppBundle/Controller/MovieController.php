@@ -80,6 +80,10 @@ class MovieController extends Controller
 
         $comments = $this->commentService->getAllByMovieId($id);
 
+        $actorsIds = json_decode($this->requestService->getMovieCredits($id, $this->container), true)['cast'];
+        $actorsAsObj = $this->requestService->getMovieActors($actorsIds, $this->container);
+        $actors = $this->serializerService->deserializeData($actorsAsObj, 'Actor');
+
         /** @var Video $video */
         foreach ($videos as $video) {
             if ($video->getSite() === 'YouTube' && $video->getType() == 'Trailer') {
@@ -91,7 +95,8 @@ class MovieController extends Controller
         return $this->render('movies/view.html.twig', [
             'movie' => $mappedMovie,
             'trailerKey' => $trailerKey,
-            'comments' => $comments
+            'comments' => $comments,
+            'actors' => $actors
         ]);
     }
 
