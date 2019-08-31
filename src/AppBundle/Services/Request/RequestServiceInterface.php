@@ -14,6 +14,8 @@ interface RequestServiceInterface
     public function getByMovieId(int $id, $container);
     public function getByFilters(string $orderBy, string $genre, string $releaseYear, string $language, $container);
     public function getGenres($container);
+    public function getMovieCredits(int $id, $container);
+    public function getMovieActors(array $actors, $container);
     public function getLanguages($container);
     public function getImdbUrl($imdbId);
     public function getVideoData($id, $container);

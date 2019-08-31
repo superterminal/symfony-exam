@@ -24,6 +24,8 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
+    const BASE_PERSON_URL = 'https://api.themoviedb.org/3/person/';
+
     const IMDB_BASE_URL = 'https://www.imdb.com/title/';
 
     const NO_PHOTO_URL = 'https://stjohnscountybar.com/wp-content/uploads/2019/04/download.png';
@@ -146,6 +148,35 @@ class RequestService extends Controller implements RequestServiceInterface
         $url = self::LANGUAGES_BASE_URL . "?api_key=" . self::API_KEY;
 
         return $restClient->get($url)->getContent();
+    }
+
+    /**
+     * @param int $id
+     * @param $container
+     * @return false|string
+     */
+    public function getMovieCredits(int $id, $container)
+    {
+        /** @var RestClient $restClient */
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::GET_BY_ID_BASE_URL . "$id/credits?api_key=" . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
+    public function getMovieActors(array $actors, $container)
+    {
+        /** @var RestClient $restClient */
+        $restClient = $container->get('circle.restclient');
+        $actorsStorage = [];
+
+        foreach ($actors as $actor) {
+            $url = self::BASE_PERSON_URL . $actor['id'] . '?api_key=' . self::API_KEY;
+            $actorsStorage[] = $restClient->get($url)->getContent();
+        }
+
+        return $actorsStorage;
     }
 
     /**
