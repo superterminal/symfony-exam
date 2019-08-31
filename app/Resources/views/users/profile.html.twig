@@ -72,21 +72,44 @@
                 <div class="panel-heading" contenteditable="false">Unwatched movies</div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-5">
-                            {% for movie in unwatched_movies %}
-                            <div class="thumbnail">
-                                <img src="{{ loadImage( movie.posterPath ) }}" width="300px" height="500">
-                                <div class="caption">
-                                    <h3>
-                                        {{ movie.originalTitle }}
-                                    </h3>
-                                    <p>
-                                        Cocker Spaniel who loves treats.
-                                    </p>
+                        {% for movie in unwatched_movies %}
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    <img src="{{ loadImage( movie.posterPath ) }}" width="300px" height="500">
+                                    <div class="caption">
+                                        <h3>
+                                            {{ movie.originalTitle }}
+                                        </h3>
+                                        <a class="btn btn-warning btn-xs" href="{{ path('add_to_watched_from_unwatched', {id: movie.id}) }}">Add to watched</a>
+                                    </div>
                                 </div>
                             </div>
-                            {% endfor %}
-                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!--/tab-content-->
+
+            </div>
+            <!--/col-9-->
+        </div>
+
+        <div class="col-sm-9">
+            <div class="panel panel-default target">
+                <div class="panel-heading" contenteditable="false">Watched movies</div>
+                <div class="panel-body">
+                    <div class="row">
+                        {% for movie in watched_movies %}
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    <img src="{{ loadImage( movie.posterPath ) }}" width="300px" height="500">
+                                    <div class="caption">
+                                        <h3>
+                                            {{ movie.originalTitle }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <!--/tab-content-->
