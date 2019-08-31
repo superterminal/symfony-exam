@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Actor
@@ -15,6 +16,8 @@ class Actor
     /**
      * @var int
      *
+     * @Serializer\Type("int")
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,12 +27,16 @@ class Actor
     /**
      * @var string
      *
+     * @Serializer\Type("string")
+     *
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var \DateTime
+     *
+     * @Serializer\Type("datetime")
      *
      * @ORM\Column(name="birthday", type="datetime")
      */
@@ -38,12 +45,16 @@ class Actor
     /**
      * @var string
      *
+     * @Serializer\Type("string")
+     *
      * @ORM\Column(name="place_of_birth", type="string", length=255)
      */
     private $placeOfBirth;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      *
      * @ORM\Column(name="biography", type="text")
      */
@@ -52,12 +63,16 @@ class Actor
     /**
      * @var string
      *
+     * @Serializer\Type("string")
+     *
      * @ORM\Column(name="imdb_id", type="string")
      */
     private $imdbId;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      *
      * @ORM\Column(name="profile_path", type="string", length=255)
      */
@@ -185,7 +200,7 @@ class Actor
     {
         $this->imdbId = $imdbId;
     }
-    
+
     /**
      * Set profilePath.
      *
