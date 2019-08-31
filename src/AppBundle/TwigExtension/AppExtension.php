@@ -3,6 +3,7 @@
 namespace AppBundle\TwigExtension;
 
 use AppBundle\Services\Request\RequestServiceInterface;
+use http\Encoding\Stream\Inflate;
 use Twig\Extension\AbstractExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Twig\TwigFunction;
@@ -24,7 +25,8 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('loadImage', [$this, 'loadImage']),
             new TwigFunction('imdbLink', [$this, 'imdbLinkBuilder']),
-            new TwigFunction('youtubeLink', [$this, 'youtubeLinkBuilder'])
+            new TwigFunction('imdbActor', [$this, 'imdbActorLinkBuilder']),
+            new TwigFunction('youtubeLink', [$this, 'youtubeLinkBuilder']),
         ];
     }
 
@@ -36,6 +38,11 @@ class AppExtension extends AbstractExtension
     public function imdbLinkBuilder(?string $imdbId)
     {
        return $this->requestService->getImdbUrl($imdbId);
+    }
+
+    public function imdbActorLinkBuilder(?string $imdb)
+    {
+        return $this->requestService->getImdbActor($imdb);
     }
 
     public function youtubeLinkBuilder(?string $key)

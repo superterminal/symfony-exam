@@ -34,11 +34,11 @@ class Actor
     private $name;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @Serializer\Type("datetime")
+     * @Serializer\Type("string")
      *
-     * @ORM\Column(name="birthday", type="datetime")
+     * @ORM\Column(name="birthday", type="string")
      */
     private $birthday;
 
@@ -130,7 +130,7 @@ class Actor
     /**
      * Get birthday.
      *
-     * @return \DateTime
+     * @return string
      */
     public function getBirthday()
     {
@@ -186,9 +186,9 @@ class Actor
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getImdbId(): string
+    public function getImdbId()
     {
         return $this->imdbId;
     }
