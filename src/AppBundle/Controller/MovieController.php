@@ -127,6 +127,23 @@ class MovieController extends Controller
     }
 
     /**
+     * @Route("/movies/view/add_to_watched_from_unwatched/{id}", name="add_to_watched_from_unwatched", methods={"POST", "GET"})
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addToWatchedFromUnwatched($id)
+    {
+        $this->unwatchedService->remove($id);
+
+        $watched = new Watched();
+
+        $this->watchedService->insert($watched, $id);
+
+        return $this->redirectToRoute('user_profile');
+    }
+
+    /**
      * @param $method
      * @param $id
      * @param $successMessage

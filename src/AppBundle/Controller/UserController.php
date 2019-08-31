@@ -133,8 +133,8 @@ class UserController extends Controller
         return $this->render('users/profile.html.twig', [
             'user' => $this->userService->currentUser(),
             'msg' => $this->messageService->getAllUnseenByUser(),
-            'unwatched_movies' => $this->getUnwatchedMovies(),
-            'watched_movies' => $this->watchedService->getAllMoviesByUser()
+            'unwatched_movies' => $this->getMovieList('unwatchedService'),
+            'watched_movies' => $this->getMovieList('watchedService')
         ]);
     }
 
@@ -222,15 +222,19 @@ class UserController extends Controller
         }
     }
 
-    public function getUnwatchedMovies()
+    /**
+     * @param $service
+     * @return mixed
+     */
+    public function getMovieList($service)
     {
-        $movies = $this->unwatchedService->getAllMoviesByUser();
+        $movies = $this->$service->getAllMoviesByUser();
 
-        $unwatchedMovies = [];
+        $type = [];
         foreach ($movies as $movie) {
-            $unwatchedMovies[] = $this->requestService->getByMovieId($movie->getMovieId(), $this->container);
+            $type[] = $this->requestService->getByMovieId($movie->getMovieId(), $this->container);
         }
 
-        return $this->serializerService->deserializeData($unwatchedMovies, 'Movie');
+        return $this->serializerService->deserializeData($type, 'Movie');
     }
 }
