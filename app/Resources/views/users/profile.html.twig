@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
+
+    {% for msg in app.flashes('message') %}
+        <div class="alert alert-success">
+            {{ msg }}
+        </div>
+    {% endfor %}
+
 {#    <h1>Hello {{ user.username }}</h1>#}
 
 {#    <h3>Full Name: {{ user.fullName }}</h3>#}
@@ -49,11 +56,14 @@
             <ul class="list-group">
                 <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
                 <li class="list-group-item text-right"><span class="pull-left"><strong>Unwatched movies</strong></span>
-                    125
+                    {{ unwatched_movies|length }}
                 </li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Watches movies</strong></span> 13
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Watched movies</strong></span>
+                    {{ watched_movies|length }}
                 </li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Comments</strong></span> 37</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Comments</strong></span>
+
+                </li>
             </ul>
 
             <div class="panel panel-default">
