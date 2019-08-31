@@ -57,4 +57,11 @@ class UnwatchedService implements UnwatchedServiceInterface
             ->unwatchedRepository
             ->findBy(['author' => $this->userService->currentUser()]);
     }
+
+    public function remove(int $id)
+    {
+        return $this
+            ->unwatchedRepository
+            ->remove($id);
+    }
 }

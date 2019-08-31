@@ -43,7 +43,7 @@ class UnwatchedRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * @param int $movieId
-     * @return void
+     * @return mixed
      */
     public function remove(int $movieId)
     {
