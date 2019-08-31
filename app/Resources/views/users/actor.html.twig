@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% set imageUrl = loadImage(actor.profilePath) %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('css/movies/view.css') }}">
+{% endblock %}
+
+{% block main %}
+
+    <div class="container">
+
+        {% for msg in app.flashes('message') %}
+            <div class="alert alert-success">
+                {{ msg }}
+            </div>
+        {% endfor %}
+
+        {% for msg in app.flashes('list') %}
+            <div class="alert alert-warning">
+                {{ msg }}
+            </div>
+        {% endfor %}
+
+        <div class="col-md-4 pic-container">
+            <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
+            <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
+            <img src="{{ imageUrl }}" alt="" width="300px" height="500px" class="pic">
+        </div>
+        <div class="col-md-8">
+            <h1>{{ actor.name }}</h1>
+            <h4>Birthday: {{ actor.birthday }}</h4>
+            <h4>Place of birth: {{ actor.placeOfBirth }}</h4>
+            <h4>Imdb link: <a href="{{ imdbActor(actor.imdbId) }}" target="_blank">{{ imdbActor(actor.imdbId) }}</a></h4>
+
+            <h4>Biography: {{ actor.biography }}</h4>
+
+            <a class="btn btn-default btn-m" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
+        </div>
+    </div>
+{% endblock %}
