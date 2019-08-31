@@ -138,7 +138,12 @@ class MovieController extends Controller
 
         $watched = new Watched();
 
-        $this->watchedService->insert($watched, $id);
+        if (!$this->watchedService->inList($id)) {
+            $this->watchedService->insert($watched, $id);
+            $this->addFlash('message', 'Movie moved successfully');
+        } else {
+            $this->addFlash('message', 'Movie is in your watched list already');
+        }
 
         return $this->redirectToRoute('user_profile');
     }
