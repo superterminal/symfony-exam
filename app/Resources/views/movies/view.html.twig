@@ -59,21 +59,24 @@
             <a class="btn btn-default btn-m" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
             <a class="btn btn-success btn-m" href="{{ path('add_to_unwatched', {id: movie.id}) }}">Add to unwatched</a>
             <a class="btn btn-warning btn-m" href="{{ path('add_to_watched', {id: movie.id}) }}">I have watched it already</a>
-
-        <form method="post" action="{{ path('comment_create', {id: movie.id}) }}">
-            <div class="form-group">
-                <div class="col-sm-6">
-                Add comment: <textarea class="form-control" rows="6" id="article_content"
-                          name="comment[content]"></textarea>
-                    <input type="submit" value="Add" class="btn btn-success btn-sm">
-                </div>
-            </div>
-
-        </form>
         </div>
 
-
+        <div class="col-md-6">
+            {% for actor in actors|slice(0, 4) %}
+                <img src="{{ loadImage(actor.profilePath) }}" alt="" width="100px" height="200px" class="img-rounded">
+            {% endfor %}
+        </div>
     </div>
+
+    <form method="post" action="{{ path('comment_create', {id: movie.id}) }}">
+        <div class="form-group">
+            <div class="col-sm-6">
+                Add comment: <textarea class="form-control" rows="6" id="article_content"
+                                       name="comment[content]"></textarea>
+                <input type="submit" value="Add" class="btn btn-success btn-sm">
+            </div>
+        </div>
+    </form>
 
     {% for comment in comments %}
         <div style="border: 2px solid #0a4b3e">
