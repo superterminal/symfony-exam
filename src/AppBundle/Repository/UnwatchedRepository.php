@@ -40,4 +40,20 @@ class UnwatchedRepository extends \Doctrine\ORM\EntityRepository
             return false;
         }
     }
+
+    /**
+     * @param int $movieId
+     * @return void
+     */
+    public function remove(int $movieId)
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->delete()
+            ->from('AppBundle:Unwatched', 'u')
+            ->where('u.movieId = ?1')
+            ->setParameter(1, $movieId)
+            ->getQuery();
+
+        return $qb->getResult();
+    }
 }
