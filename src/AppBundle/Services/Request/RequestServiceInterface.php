@@ -16,8 +16,10 @@ interface RequestServiceInterface
     public function getGenres($container);
     public function getMovieCredits(int $id, $container);
     public function getMovieActors(array $actors, $container);
+    public function getActor(int $id, $container);
     public function getLanguages($container);
     public function getImdbUrl($imdbId);
+    public function getImdbActor($imdbId);
     public function getVideoData($id, $container);
     public function getVideoUrl(string $key);
 }

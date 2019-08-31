@@ -28,6 +28,8 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const IMDB_BASE_URL = 'https://www.imdb.com/title/';
 
+    const IMDB_ACTOR_BASE_URL = 'https://www.imdb.com/name/';
+
     const NO_PHOTO_URL = 'https://stjohnscountybar.com/wp-content/uploads/2019/04/download.png';
 
     const YOUTUBE_BASE_URL = 'https://www.youtube.com/watch?v=';
@@ -179,6 +181,16 @@ class RequestService extends Controller implements RequestServiceInterface
         return $actorsStorage;
     }
 
+    public function getActor(int $id, $container)
+    {
+        /** @var RestClient $restClient */
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::BASE_PERSON_URL . "$id?api_key=" . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
     /**
      * @param $imdbId
      * @return string
@@ -187,6 +199,16 @@ class RequestService extends Controller implements RequestServiceInterface
     {
         return self::IMDB_BASE_URL . "$imdbId/";
     }
+
+    /**
+     * @param $imdbId
+     * @return string
+     */
+    public function getImdbActor($imdbId)
+    {
+        return self::IMDB_ACTOR_BASE_URL . "$imdbId/";
+    }
+
 
     public function getVideoData($id, $container)
     {
