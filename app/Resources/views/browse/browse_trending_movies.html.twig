@@ -3,8 +3,10 @@
 {% block body %}
 
     <div class="container body-content text-center">
+        <h3>Here are today's most trending movies</h3>
+        <br>
         <div class="row">
-            {% for movie in result %}
+            {% for movie in movies %}
                 <div class="col-md-4">
                     <article>
                         <a href="{{ path('view_movie', {id: movie.id}) }}">
@@ -16,7 +18,7 @@
                 </div>
             {% endfor %}
             <div class="navigation text-center">
-                {{ knp_pagination_render(result) }}
+                {{ knp_pagination_render(movies) }}
             </div>
         </div>
     </div>

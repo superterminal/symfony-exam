@@ -3,20 +3,22 @@
 {% block body %}
 
     <div class="container body-content text-center">
+        <h3>Here are today's most trending TV shows</h3>
+        <br>
         <div class="row">
-            {% for movie in result %}
+            {% for show in shows %}
                 <div class="col-md-4">
                     <article>
-                        <a href="{{ path('view_movie', {id: movie.id}) }}">
-                            <img src="{{ loadImage(movie.posterPath) }}" alt="" width="200px" height="300px"><br>
-                            <h5>{{ movie.originalTitle }}</h5>
+                        <a href="{{ path('view_tv_show', {id: show.id}) }}">
+                            <img src="{{ loadImage(show.posterPath) }}" alt="" width="200px" height="300px"><br>
+                            <h5>{{ show.originalName }}</h5>
                             <h5>Click for more info</h5>
                         </a>
                     </article>
                 </div>
             {% endfor %}
             <div class="navigation text-center">
-                {{ knp_pagination_render(result) }}
+                {{ knp_pagination_render(shows) }}
             </div>
         </div>
     </div>

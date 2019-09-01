@@ -56,41 +56,49 @@
 
             <h4>{{ movie.overview }}</h4>
 
+            {% for actor in actors %}
+                <div class="col-md-4">
+                    <img src="{{ loadImage(actor.profilePath) }}" alt="" width="100px" height="200px" class="img-rounded">
+                    <a href="{{ path('view_actor', {id: actor.id}) }}"><h3>{{ actor.name }}</h3></a>
+                </div>
+            {% endfor %}
+
+            <div class="navigation text-center">
+                {{ knp_pagination_render(actors) }}
+            </div>
+
             <a class="btn btn-default btn-m" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
             <a class="btn btn-success btn-m" href="{{ path('add_to_unwatched', {id: movie.id}) }}">Add to unwatched</a>
             <a class="btn btn-warning btn-m" href="{{ path('add_to_watched', {id: movie.id}) }}">I have watched it already</a>
-        </div>
 
-        <div class="col-md-2">
-            <div class="row">
-                {% for actor in actors|slice(0, 4) %}
-                    <img src="{{ loadImage(actor.profilePath) }}" alt="" width="100px" height="200px" class="img-rounded">
-                    <a href="{{ path('view_actor', {id: actor.id}) }}"><h3>{{ actor.name }}</h3></a>
-                {% endfor %}
-            </div>
+
         </div>
     </div>
 
-    <form method="post" action="{{ path('comment_create', {id: movie.id}) }}">
-        <div class="form-group">
-            <div class="col-sm-6">
-                Add comment: <textarea class="form-control" rows="6" id="article_content"
-                                       name="comment[content]"></textarea>
-                <input type="submit" value="Add" class="btn btn-success btn-sm">
-            </div>
+    <div class="container">
+        <div class="col-md-10">
+            <form method="post" action="{{ path('comment_create', {id: movie.id}) }}">
+                <div class="form-group">
+                        Add comment: <textarea class="form-control" rows="5" id="article_content"
+                                               name="comment[content]"></textarea>
+                        <input type="submit" value="Add" class="btn btn-success btn-sm">
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 
     {% for comment in comments %}
         <div style="border: 2px solid #0a4b3e">
             <p>{{ comment.content }}</p>
-            <small>{{ comment.dateAdded|date("F js \\a\\t g:ia") }}</small>
-                <a href="{{ path('user_message', {id: comment.author.id}) }}">
-                    <img class="img-rounded" src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" width="30px" height="10px">
-                </a>
+            <small>{{ comment.dateAdded|date("F js \\a\\t g:ia", "Europe/Sofia") }}</small>
+            <a href="{{ path('user_message', {id: comment.author.id}) }}">
+                <img class="img-rounded" src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" width="40px" height="20px">
+            </a>
             <hr>
         </div>
     {% endfor %}
+
+
 
 
 

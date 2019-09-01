@@ -8,22 +8,6 @@
         </div>
     {% endfor %}
 
-{#    <h1>Hello {{ user.username }}</h1>#}
-
-{#    <h3>Full Name: {{ user.fullName }}</h3>#}
-
-{#    <h3>Email: {{ user.email }}</h3>#}
-
-{#    <div>#}
-{#        <img class="img-rounded" src="{{ asset('uploads/images/users/' ~ user.image) }}" width="400px" height="200px">#}
-{#    </div>#}
-
-{#    <a href="{{ path('edit_profile') }}" class="btn btn-success col-sm-3">Edit Profile</a>#}
-
-{#    <br>#}
-{#    <br>#}
-{#    <br>#}
-
 <div class="container bootstrap snippet">
     <div class="row">
         <div class="col-sm-10">
@@ -44,14 +28,14 @@
                 </li>
                 <li class="list-group-item text-right"><span
                             class="pull-left"><strong>Full name</strong></span> {{ user.fullName }}</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>User status:</strong></span> User
+                <li class="list-group-item text-right"><span
+                            class="pull-left"><strong>Edit profile</strong></span> <a href="{{ path('edit_profile') }}">Edit profile</a></li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong>Mailbox:</strong></span>
+                    <a href="{{ path('user_mailbox') }}" class="btn btn-info btn-sm">
+                        <span class="glyphicon glyphicon-envelope"></span>({{ msg|length }}) Mailbox
+                    </a>
                 </li>
             </ul>
-
-            {#                <div class="panel panel-default">#}
-            {#                    <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>#}
-            {#                    <div class="panel-body"><a href="https://bootdey.com">https://bootdey.com</a></div>#}
-            {#                </div>#}
 
             <ul class="list-group">
                 <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
@@ -61,19 +45,7 @@
                 <li class="list-group-item text-right"><span class="pull-left"><strong>Watched movies</strong></span>
                     {{ watched_movies|length }}
                 </li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Comments</strong></span>
-
-                </li>
             </ul>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">Social Media</div>
-                <div class="panel-body">
-                    <i class="fa fa-facebook fa-2x"></i> <i class="fa fa-github fa-2x"></i> <i
-                            class="fa fa-twitter fa-2x"></i> <i class="fa fa-pinterest fa-2x"></i> <i
-                            class="fa fa-google-plus fa-2x"></i>
-                </div>
-            </div>
 
         </div>
         <!--/col-3-->
@@ -130,10 +102,5 @@
 
     </div>
 </div>
-        <!--/row-->
-
-        <a href="{{ path('user_mailbox') }}" class="btn btn-info btn-sm">
-            <span class="glyphicon glyphicon-envelope"></span>({{ msg|length }}) Mailbox
-        </a>
 {% endblock %}
 

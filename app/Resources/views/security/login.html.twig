@@ -4,11 +4,16 @@
 
 {% block main %}
 
+    {% if error %}
+        <div class="alert alert-warning">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+
     <div class="container body-content span=8 offset=2">
         <div class="well">
             <form name="authenticate" class="form-horizontal" action="{{ path('security_login') }}" method="post">
                 <fieldset>
-                    <div>{{ error }}</div>
                     <legend>Login</legend>
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="user_username">Username</label>
