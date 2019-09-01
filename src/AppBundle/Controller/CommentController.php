@@ -70,6 +70,12 @@ class CommentController extends Controller
 
         $this->commentService->create($comment, $id);
 
+        if (strstr($request->server->get('HTTP_REFERER'), 'tv')) {
+            return $this->redirectToRoute("view_tv_show", [
+                'id' => $id
+            ]);
+        }
+
         return $this->redirectToRoute("view_movie", [
             'id' => $id
         ]);

@@ -39,17 +39,36 @@ class BrowseController extends Controller
     }
 
     /**
-     * @Route("/browse", name="browse_index")
+     * @Route("/browse/movies", name="browse_index")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function browseMovies()
     {
         return $this->render('browse/browse.html.twig', [
             'genres' => $this->getGenres(),
             'languages' => $this->getLanguages()
         ]);
     }
+
+    /**
+     * @Route("/browse/tv", name="browse_tv_index")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function browseTv(Request $request)
+    {
+        $paginatedShows = $this->paginatorService->paginate(
+            $this->getShows(),
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 6)
+        );
+
+        return $this->render('browse/browse_tv.html.twig', [
+            'shows' => $paginatedShows
+        ]);
+    }
+
 
     /**
      * @Route("/browse/search", name="browse_action", methods={"POST"})
@@ -100,6 +119,15 @@ class BrowseController extends Controller
             'genre' => $genre,
             'result' => $paginatedMovies,
         ]);
+    }
+
+    public function getShows()
+    {
+        $shows = $this->requestService->getPopularTvShows($this->container);
+
+        $showsAsArr = $this->serializerService->deserialize($shows, 'Page')->getResults();
+
+        return $this->serializerService->deserializeData($showsAsArr, 'BaseTvShow');
     }
 
     /**

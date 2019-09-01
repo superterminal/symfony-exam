@@ -47,7 +47,7 @@ class MovieController extends Controller
 
     /**
      * MovieController constructor.
-     * @param RequestServiceInterface $requestService
+     * @param RequestSe rviceInterface $requestService
      * @param SerializerServiceInterface $serializerService
      * @param CommentServiceInterface $commentService
      * @param UnwatchedServiceInterface $unwatchedService
@@ -78,7 +78,7 @@ class MovieController extends Controller
         $videos = $this->serializerService->deserializeData($videoData, 'Video');
         $trailerKey = '';
 
-        $comments = $this->commentService->getAllByMovieId($id);
+        $comments = $this->commentService->getAllById($id);
 
         $actorsIds = json_decode($this->requestService->getMovieCredits($id, $this->container), true)['cast'];
         $actorsAsObj = $this->requestService->getMovieActors($actorsIds, $this->container);
