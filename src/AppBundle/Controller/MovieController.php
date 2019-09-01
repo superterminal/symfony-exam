@@ -160,7 +160,7 @@ class MovieController extends Controller
 
         if (!$this->watchedService->inList($id)) {
             $this->watchedService->insert($watched, $id);
-            $this->addFlash('message', 'Movie moved successfully');
+            $this->addFlash('success', 'Movie moved successfully');
         } else {
             $this->addFlash('message', 'Movie is in your watched list already');
         }
@@ -184,13 +184,13 @@ class MovieController extends Controller
         $inStorage = $service->inList($id);
 
         if ($inStorage) {
-            $this->addFlash('list', $failMessage);
+            $this->addFlash('message', $failMessage);
             return $this->redirectToRoute('view_movie', ['id' => $id]);
         }
 
         $service->insert($method, $id);
 
-        $this->addFlash('list', $successMessage);
+        $this->addFlash('success', $successMessage);
 
         return $this->redirectToRoute('view_movie', ['id' => $id]);
     }

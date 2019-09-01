@@ -12,13 +12,13 @@
 
     <div class="container">
 
-        {% for msg in app.flashes('message') %}
+        {% for msg in app.flashes('success') %}
             <div class="alert alert-success">
                 {{ msg }}
             </div>
         {% endfor %}
 
-        {% for msg in app.flashes('list') %}
+        {% for msg in app.flashes('message') %}
             <div class="alert alert-warning">
                 {{ msg }}
             </div>

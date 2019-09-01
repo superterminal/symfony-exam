@@ -13,13 +13,12 @@ class PaginatorService extends Controller implements PaginatorServiceInterface
 
     /**
      * PaginatorService constructor.
-     * @param $paginator
+     * @param PaginatorInterface $paginator
      */
-    public function __construct($paginator)
+    public function __construct(PaginatorInterface $paginator)
     {
         $this->paginator = $paginator;
     }
-
 
     /**
      * @param $target
