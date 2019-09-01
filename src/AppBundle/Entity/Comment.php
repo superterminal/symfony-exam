@@ -31,9 +31,9 @@ class Comment
     /**
      * @var int
      *
-     * @ORM\Column(name="movie_id", type="integer")
+     * @ORM\Column(name="production_id", type="integer")
      */
-    private $movie_id;
+    private $production_id;
 
     /**
      * @var \DateTime
@@ -135,16 +135,16 @@ class Comment
     /**
      * @return int
      */
-    public function getMovieId(): int
+    public function getProductionId(): int
     {
-        return $this->movie_id;
+        return $this->production_id;
     }
 
     /**
-     * @param int $movie_id
+     * @param int $production_id
      */
-    public function setMovieId(int $movie_id): void
+    public function setProductionId(int $production_id): void
     {
-        $this->movie_id = $movie_id;
+        $this->production_id = $production_id;
     }
 }
