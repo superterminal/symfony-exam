@@ -52,9 +52,8 @@ class RequestService extends Controller implements RequestServiceInterface
         /** @var Container $restClient */
         $restClient = $container->get('circle.restclient');
 
-        $url = self::BASE_URL . "movies/?api_key=" . self::API_KEY .
+        $url = self::BASE_URL . "movie/?api_key=" . self::API_KEY .
             "&query=$query";
-
         return $restClient->get($url)->getContent();
     }
 
@@ -251,6 +250,15 @@ class RequestService extends Controller implements RequestServiceInterface
         $restClient = $container->get('circle.restclient');
 
         $url = self::GET_BY_TVID_BASE_URL . $tv_id . '/season/' . $season_number . '?api_key=' . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
+    public function getMoviesForHomepage($container)
+    {
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::DISCOVER_BASE_URL . '?api_key=' . self::API_KEY;
 
         return $restClient->get($url)->getContent();
     }

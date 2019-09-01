@@ -25,4 +25,5 @@ interface RequestServiceInterface
     public function getVideoUrl(string $key);
     public function getPopularTvShows($container);
     public function getShowEpisodes(int $tv_id, int $season_number, $container);
+    public function getMoviesForHomepage($container);
 }

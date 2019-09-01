@@ -49,7 +49,12 @@ class CommentService extends Controller implements CommentServiceInterface
         $this->serializerService = $serializerService;
     }
 
-
+    /**
+     * @param Comment $comment
+     * @param int $id
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function create(Comment $comment, int $id): bool
     {
         $comment
@@ -59,6 +64,10 @@ class CommentService extends Controller implements CommentServiceInterface
         return $this->commentRepository->insert($comment);
     }
 
+    /**
+     * @param int $id
+     * @return array
+     */
     public function getAllById(int $id)
     {
         return $this->commentRepository->findBy(['production_id' => $id], ['dateAdded' => 'DESC']);

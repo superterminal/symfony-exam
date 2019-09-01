@@ -54,6 +54,8 @@ class CommentController extends Controller
     /**
      * @Route("/comment/create/{id}", name="comment_create", methods={"POST"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -83,6 +85,8 @@ class CommentController extends Controller
 
     /**
      * @Route("/user/{id}/message", name="user_message", methods={"GET"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param Request $request
      * @param $id

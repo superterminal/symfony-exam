@@ -32,7 +32,13 @@ class MessageService implements MessageServiceInterface
         $this->userService = $userService;
     }
 
-
+    /**
+     * @param Message $message
+     * @param int $recipientId
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function create(Message $message, int $recipientId): bool
     {
         $sender = $this->userService->currentUser();

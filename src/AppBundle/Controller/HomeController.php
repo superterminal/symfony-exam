@@ -40,28 +40,27 @@ class HomeController extends Controller
     }
 
     /**
-     * @Route("/", name="movies_index")
+     * @Route("/", name="home")
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index(Request $request)
     {
-        $trendingMovies = $this->requestService->getTrendingMoviesByDay($this->container);
+        $movies = json_decode($this->requestService->getMoviesForHomepage($this->container), true)['results'];
 
-        $moviesAsArray = $this->serializerService->deserialize($trendingMovies, 'Page')->getResults();
+        $pagedMovies = $this->serializerService->deserializeData($movies, 'TrendingMovie');
 
-        $movies = $this->serializerService->deserializeData($moviesAsArray, 'Movie');
-
-        /** @var Paginator $paginator */
-        $paginatedMovies = $this->paginatorService->paginate(
-            $movies,
+        $movies = $this->paginatorService->paginate(
+            $pagedMovies,
             $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 3)
+            $request->query->getInt('limit', 6)
         );
 
         return $this->render('home/index.html.twig', [
-            'movies' => $paginatedMovies
+            'user' => $this->getUser(),
+            'movies' => $movies
         ]);
     }
+
 }

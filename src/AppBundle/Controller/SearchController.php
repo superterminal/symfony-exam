@@ -8,6 +8,7 @@ use AppBundle\Form\SearchType;
 use AppBundle\Services\Paginator\PaginatorServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,6 +44,8 @@ class SearchController extends Controller
     /**
      * @Route("/search", name="search_action", methods={"POST"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -59,6 +62,8 @@ class SearchController extends Controller
 
     /**
      * @Route("/search?query={query}", name="search_results", methods={"GET", "POST"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param Request $request
      * @param $query
@@ -79,7 +84,7 @@ class SearchController extends Controller
         $paginatedMovies = $this->paginatorService->paginate(
             $movies,
             $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 3)
+            $request->query->getInt('limit', 6)
         );
 
         return $this->render('search/load.html.twig', [

@@ -31,6 +31,13 @@ class UnwatchedService implements UnwatchedServiceInterface
         $this->userService = $userService;
     }
 
+    /**
+     * @param Unwatched $unwatched
+     * @param int $id
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function insert(Unwatched $unwatched, int $id)
     {
         $unwatched
@@ -41,6 +48,10 @@ class UnwatchedService implements UnwatchedServiceInterface
         return $this->unwatchedRepository->insert($unwatched);
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function inList(int $id): bool
     {
         if (0 !== count($this->unwatchedRepository->findBy(['movieId' => $id])))
@@ -51,6 +62,9 @@ class UnwatchedService implements UnwatchedServiceInterface
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getAllMoviesByUser()
     {
         return $this
@@ -58,6 +72,10 @@ class UnwatchedService implements UnwatchedServiceInterface
             ->findBy(['author' => $this->userService->currentUser()]);
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function remove(int $id)
     {
         return $this

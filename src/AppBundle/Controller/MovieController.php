@@ -8,11 +8,13 @@ use AppBundle\Entity\Watched;
 use AppBundle\Repository\UnwatchedRepository;
 use AppBundle\Repository\WatchedRepository;
 use AppBundle\Services\Comment\CommentServiceInterface;
+use AppBundle\Services\Paginator\PaginatorServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
 use AppBundle\Services\Unwatched\UnwatchedService;
 use AppBundle\Services\Unwatched\UnwatchedServiceInterface;
 use AppBundle\Services\Watched\WatchedServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,6 +33,11 @@ class MovieController extends Controller
     private $serializerService;
 
     /**
+     * @var PaginatorServiceInterface
+     */
+    private $paginatorService;
+
+    /**
      * @var CommentServiceInterface
      */
     private $commentService;
@@ -47,16 +54,18 @@ class MovieController extends Controller
 
     /**
      * MovieController constructor.
-     * @param RequestSe rviceInterface $requestService
+     * @param RequestServiceInterface $requestService
      * @param SerializerServiceInterface $serializerService
+     * @param PaginatorServiceInterface $paginatorService
      * @param CommentServiceInterface $commentService
      * @param UnwatchedServiceInterface $unwatchedService
      * @param WatchedServiceInterface $watchedService
      */
-    public function __construct(RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, CommentServiceInterface $commentService, UnwatchedServiceInterface $unwatchedService, WatchedServiceInterface $watchedService)
+    public function __construct(RequestServiceInterface $requestService, SerializerServiceInterface $serializerService, PaginatorServiceInterface $paginatorService, CommentServiceInterface $commentService, UnwatchedServiceInterface $unwatchedService, WatchedServiceInterface $watchedService)
     {
         $this->requestService = $requestService;
         $this->serializerService = $serializerService;
+        $this->paginatorService = $paginatorService;
         $this->commentService = $commentService;
         $this->unwatchedService = $unwatchedService;
         $this->watchedService = $watchedService;
@@ -65,18 +74,19 @@ class MovieController extends Controller
     /**
      * @Route("/movies/view/{id}", name="view_movie", methods={"GET"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function view($id)
+    public function view(Request $request, $id)
     {
         $movie = $this->requestService->getByMovieId($id, $this->container);
 
-        $mappedMovie = $this->serializerService->deserialize($movie, 'Movie');
+        $deserializedMovie = $this->serializerService->deserialize($movie, 'Movie');
 
-        $videoData = json_decode($this->requestService->getVideoData($id, $this->container), true)['results'];
-        $videos = $this->serializerService->deserializeData($videoData, 'Video');
-        $trailerKey = '';
+        $video = json_decode($this->requestService->getVideoData($id, $this->container), true)['results'];
+        $deserializedVideos = $this->serializerService->deserializeData($video, 'Video');
 
         $comments = $this->commentService->getAllById($id);
 
@@ -84,25 +94,26 @@ class MovieController extends Controller
         $actorsAsObj = $this->requestService->getMovieActors($actorsIds, $this->container);
         $actors = $this->serializerService->deserializeData($actorsAsObj, 'Actor');
 
-        /** @var Video $video */
-        foreach ($videos as $video) {
-            if ($video->getSite() === 'YouTube' && $video->getType() == 'Trailer') {
-                $trailerKey = $video->getKey();
-                break;
-            }
-        }
+        $actorsPaginated = $this->paginatorService->paginate(
+            $actors,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 3)
+        );
+
 
         return $this->render('movies/view.html.twig', [
-            'movie' => $mappedMovie,
-            'trailerKey' => $trailerKey,
+            'movie' => $deserializedMovie,
+            'trailerKey' => $this->getTrailerKey($deserializedVideos),
             'comments' => $comments,
-            'actors' => $actors
+            'actors' => $actorsPaginated
         ]);
     }
 
 
     /**
      * @Route("/movies/view/add_to_unwatched/{id}", name="add_to_unwatched", methods={"POST", "GET"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -119,6 +130,8 @@ class MovieController extends Controller
     /**
      * @Route("/movies/view/add_to_watched/{id}", name="add_to_watched", methods={"POST", "GET"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -133,6 +146,8 @@ class MovieController extends Controller
 
     /**
      * @Route("/movies/view/add_to_watched_from_unwatched/{id}", name="add_to_watched_from_unwatched", methods={"POST", "GET"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -178,5 +193,19 @@ class MovieController extends Controller
         $this->addFlash('list', $successMessage);
 
         return $this->redirectToRoute('view_movie', ['id' => $id]);
+    }
+
+    /**
+     * @param array $videos
+     * @return string
+     */
+    public function getTrailerKey(array $videos)
+    {
+        /** @var Video $video */
+        foreach ($videos as $video) {
+            if ($video->getSite() === 'YouTube' && $video->getType() == 'Trailer') {
+                return $video->getKey();
+            }
+        }
     }
 }

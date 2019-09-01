@@ -11,12 +11,22 @@ class PaginatorService extends Controller implements PaginatorServiceInterface
 
     private $paginator;
 
-    //dependency injection $paginator
-    public function __construct(PaginatorInterface $paginator)
+    /**
+     * PaginatorService constructor.
+     * @param $paginator
+     */
+    public function __construct($paginator)
     {
         $this->paginator = $paginator;
     }
 
+
+    /**
+     * @param $target
+     * @param int $page
+     * @param int $limit
+     * @return \Knp\Component\Pager\Pagination\PaginationInterface
+     */
     public function paginate($target, int $page = 1, int $limit = 10)
     {
         return $this->paginator->paginate(

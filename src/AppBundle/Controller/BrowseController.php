@@ -6,7 +6,9 @@ use AppBundle\Entity\Browse;
 use AppBundle\Form\BrowseType;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
+use Knp\Component\Pager\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,7 +41,7 @@ class BrowseController extends Controller
     }
 
     /**
-     * @Route("/browse/movies", name="browse_index")
+     * @Route("/browse/movies", name="browse_movies_index")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -54,9 +56,26 @@ class BrowseController extends Controller
     /**
      * @Route("/browse/tv", name="browse_tv_index")
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function browseTv(Request $request)
+    public function browseTv()
+    {
+        return $this->render('browse/browse_tv_shows.html.twig', [
+            'genres' => $this->getGenres(),
+            'languages' => $this->getLanguages()
+        ]);
+    }
+
+    /**
+     * @Route("/browse/trending/tv", name="browse_trending_tv_index")
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function browseTrendingTv(Request $request)
     {
         $paginatedShows = $this->paginatorService->paginate(
             $this->getShows(),
@@ -64,14 +83,44 @@ class BrowseController extends Controller
             $request->query->getInt('limit', 6)
         );
 
-        return $this->render('browse/browse_tv.html.twig', [
+        return $this->render('browse\browse_trending_tv.twig', [
             'shows' => $paginatedShows
+        ]);
+    }
+
+    /**
+     * @Route("/browse/trending/movies", name="browse_trending_movies_index")
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function browseTrendingMovies(Request $request)
+    {
+        $trendingMovies = $this->requestService->getTrendingMoviesByDay($this->container);
+
+        $moviesAsArray = $this->serializerService->deserialize($trendingMovies, 'Page')->getResults();
+
+        $movies = $this->serializerService->deserializeData($moviesAsArray, 'Movie');
+
+        /** @var Paginator $paginator */
+        $paginatedMovies = $this->paginatorService->paginate(
+            $movies,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 6)
+        );
+
+        return $this->render('browse/browse_trending_movies.html.twig', [
+            'movies' => $paginatedMovies
         ]);
     }
 
 
     /**
      * @Route("/browse/search", name="browse_action", methods={"POST"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -82,7 +131,7 @@ class BrowseController extends Controller
         $form = $this->createForm(BrowseType::class, $browse);
         $form->handleRequest($request);
 
-        return $this->redirectToRoute('browse_results', [
+        return $this->redirectToRoute('browse_movie_results', [
             'orderBy' => $form->getData()->getOrderBy(),
             'genre' => $form->getData()->getGenre() == null ? '\\' : $form->getData()->getGenre(),
             'releaseYear' => $form->getData()->getReleaseYear() == null ? '\\' : $form->getData()->getReleaseYear(),
@@ -91,7 +140,7 @@ class BrowseController extends Controller
     }
 
     /**
-     * @Route("/browse/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}&lang={language}", name="browse_results", methods={"GET", "POST"})
+     * @Route("/browse/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}&lang={language}", name="browse_movie_results", methods={"GET", "POST"})
      *
      * @param Request $request
      * @param null $orderBy
@@ -121,6 +170,9 @@ class BrowseController extends Controller
         ]);
     }
 
+    /**
+     * @return mixed
+     */
     public function getShows()
     {
         $shows = $this->requestService->getPopularTvShows($this->container);

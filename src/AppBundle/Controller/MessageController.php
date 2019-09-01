@@ -47,6 +47,8 @@ class MessageController extends Controller
     /**
      * @Route("/user/{id}/message/create", name="message_create",  methods={"POST"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -65,10 +67,11 @@ class MessageController extends Controller
     /**
      * @Route("/user/mailbox", name="user_mailbox",  methods={"GET"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function getAllByUser()
     {
@@ -81,11 +84,12 @@ class MessageController extends Controller
     /**
      * @Route("/user/mailbox/message/{id}", name="user_mailbox_message",  methods={"GET"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function view(int $id)
     {
@@ -103,9 +107,10 @@ class MessageController extends Controller
     /**
      * @Route("/user/mailbox/message/{id}", name="user_mailbox_sent_message",  methods={"POST"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param Request $request
      * @param int $id
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function sentMessageToRecipient(Request $request, $id)

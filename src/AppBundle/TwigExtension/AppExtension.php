@@ -30,21 +30,37 @@ class AppExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * @param string|null $imageUrl
+     * @return mixed
+     */
     public function loadImage(?string $imageUrl)
     {
         return $this->requestService->getImageUrl($imageUrl);
     }
 
+    /**
+     * @param string|null $imdbId
+     * @return mixed
+     */
     public function imdbLinkBuilder(?string $imdbId)
     {
        return $this->requestService->getImdbUrl($imdbId);
     }
 
+    /**
+     * @param string|null $imdb
+     * @return mixed
+     */
     public function imdbActorLinkBuilder(?string $imdb)
     {
         return $this->requestService->getImdbActor($imdb);
     }
 
+    /**
+     * @param string|null $key
+     * @return mixed
+     */
     public function youtubeLinkBuilder(?string $key)
     {
         return $this->requestService->getVideoUrl($key);

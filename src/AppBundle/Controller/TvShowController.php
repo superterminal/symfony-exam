@@ -7,6 +7,7 @@ use AppBundle\Services\Comment\CommentServiceInterface;
 use AppBundle\Services\Paginator\PaginatorServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
 use AppBundle\Services\Serializer\SerializerServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -52,6 +53,8 @@ class TvShowController extends Controller
     /**
      * @Route("/tv/view/{id}", name="view_tv_show", methods={"GET"})
      *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -82,6 +85,8 @@ class TvShowController extends Controller
 
     /**
      * @Route("/tv/{tv_id}/view/season/{season_number}", name="view_season_info", methods={"GET"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param TvSeason $season
      * @return \Symfony\Component\HttpFoundation\Response
