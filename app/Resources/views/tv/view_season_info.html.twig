@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('css/movies/view.css') }}">
+{% endblock %}
+
+{% block main %}
+
+    <div class="container">
+
+        <div class="col-md-8">
+            {% for episode in episodes %}
+                <hr>
+                <h2>Episode: {{ episode.episodeNumber }}</h2>
+                <img src="{{ loadImage(episode.stillPath) }}" alt="" width="600px" height="300px">
+                <h1>{{ episode.name }}</h1>
+                <h3>Air date: {{ episode.airDate }}</h3>
+                <h3>Overview: {{ episode.overview }}</h3>
+            {% endfor %}
+
+            <div class="navigation text-center">
+                {{ knp_pagination_render(episodes) }}
+            </div>
+
+            <a class="btn btn-default btn-m" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
+        </div>
+
+
+    </div>
+{% endblock %}

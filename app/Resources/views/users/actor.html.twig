@@ -32,10 +32,14 @@
         <div class="col-md-8">
             <h1>{{ actor.name }}</h1>
             <h4>Birthday: {{ actor.birthday }}</h4>
-            <h4>Place of birth: {{ actor.placeOfBirth }}</h4>
+            {% if actor.placeOfBirth %}
+                <h4>Place of birth: {{ actor.placeOfBirth }}</h4>
+            {% endif %}
             <h4>Imdb link: <a href="{{ imdbActor(actor.imdbId) }}" target="_blank">{{ imdbActor(actor.imdbId) }}</a></h4>
 
-            <h4>Biography: {{ actor.biography }}</h4>
+            {% if actor.biography %}
+                <h4>Biography: {{ actor.biography }}</h4>
+            {% endif %}
 
             <a class="btn btn-default btn-m" href="{{ app.request.headers.get('referer') }}">back &raquo;</a>
         </div>
