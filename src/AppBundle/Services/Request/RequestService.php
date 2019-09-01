@@ -10,11 +10,13 @@ use Symfony\Component\DependencyInjection\Container;
 
 class RequestService extends Controller implements RequestServiceInterface
 {
-    const BASE_URL = 'https://api.themoviedb.org/3/search/movie';
+    const BASE_URL = 'https://api.themoviedb.org/3/search/';
 
     const TRENDING_BASE_URL = 'https://api.themoviedb.org/3/trending/movie/day';
 
     const GET_BY_ID_BASE_URL = 'https://api.themoviedb.org/3/movie/';
+
+    const GET_BY_TVID_BASE_URL = 'https://api.themoviedb.org/3/tv/';
 
     const DISCOVER_BASE_URL = 'https://api.themoviedb.org/3/discover/movie';
 
@@ -34,6 +36,8 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const YOUTUBE_BASE_URL = 'https://www.youtube.com/watch?v=';
 
+    const POPULAR_TV_BASE_URL = 'https://api.themoviedb.org/3/tv/popular';
+
     const API_KEY = '09d9101382d79a2be4f6c5081fb53919';
 
 
@@ -48,7 +52,7 @@ class RequestService extends Controller implements RequestServiceInterface
         /** @var Container $restClient */
         $restClient = $container->get('circle.restclient');
 
-        $url = self::BASE_URL . "?api_key=" . self::API_KEY .
+        $url = self::BASE_URL . "movies/?api_key=" . self::API_KEY .
             "&query=$query";
 
         return $restClient->get($url)->getContent();
@@ -92,6 +96,15 @@ class RequestService extends Controller implements RequestServiceInterface
         $restClient = $container->get('circle.restclient');
 
         $url = self::GET_BY_ID_BASE_URL . $id . "?api_key=" . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
+    public function getByTvShowId(int $id, $container)
+    {
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::GET_BY_TVID_BASE_URL . $id . '?api_key=' . self::API_KEY;
 
         return $restClient->get($url)->getContent();
     }
@@ -222,5 +235,23 @@ class RequestService extends Controller implements RequestServiceInterface
     public function getVideoUrl(string $key)
     {
         return self::YOUTUBE_BASE_URL . $key;
+    }
+
+    public function getPopularTvShows($container)
+    {
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::POPULAR_TV_BASE_URL . '?api_key=' . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
+    public function getShowEpisodes(int $tv_id, int $season_number, $container)
+    {
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::GET_BY_TVID_BASE_URL . $tv_id . '/season/' . $season_number . '?api_key=' . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
     }
 }

@@ -50,17 +50,17 @@ class CommentService extends Controller implements CommentServiceInterface
     }
 
 
-    public function create(Comment $comment, int $movieId): bool
+    public function create(Comment $comment, int $id): bool
     {
         $comment
             ->setAuthor($this->userService->currentUser())
-            ->setMovieId($movieId);
+            ->setProductionId($id);
 
         return $this->commentRepository->insert($comment);
     }
 
-    public function getAllByMovieId(int $movieId)
+    public function getAllById(int $id)
     {
-        return $this->commentRepository->findBy(['movie_id' => $movieId], ['dateAdded' => 'DESC']);
+        return $this->commentRepository->findBy(['production_id' => $id], ['dateAdded' => 'DESC']);
     }
 }
