@@ -51,12 +51,13 @@ class WatchedService implements WatchedServiceInterface
      */
     public function inList(int $id): bool
     {
-        if (0 !== count($this->watchedRepository->findBy(['movieId' => $id])))
+
+        if (0 === count($this->watchedRepository->findBy(['movieId' => $id])))
         {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**

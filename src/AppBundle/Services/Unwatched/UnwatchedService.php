@@ -54,12 +54,12 @@ class UnwatchedService implements UnwatchedServiceInterface
      */
     public function inList(int $id): bool
     {
-        if (0 !== count($this->unwatchedRepository->findBy(['movieId' => $id])))
+        if (0 === count($this->unwatchedRepository->findBy(['movieId' => $id])))
         {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**

@@ -153,12 +153,11 @@ class MovieController extends Controller
      */
     public function addToWatchedFromUnwatched($id)
     {
+        $watched = new Watched();
+        
         $this->unwatchedService->remove($id);
 
-        $watched = new Watched();
-
-
-        if ($this->watchedService->inList($id)) {
+        if (!$this->watchedService->inList($id)) {
             $this->watchedService->insert($watched, $id);
             $this->addFlash('success', 'Movie moved successfully');
         } else {
