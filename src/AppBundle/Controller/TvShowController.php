@@ -88,7 +88,9 @@ class TvShowController extends Controller
      *
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
-     * @param TvSeason $season
+     * @param Request $request
+     * @param int $tv_id
+     * @param int $season_number
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function viewSeason(Request $request, int $tv_id, int $season_number)

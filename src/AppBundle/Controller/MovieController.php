@@ -100,7 +100,6 @@ class MovieController extends Controller
             $request->query->getInt('limit', 3)
         );
 
-
         return $this->render('movies/view.html.twig', [
             'movie' => $deserializedMovie,
             'trailerKey' => $this->getTrailerKey($deserializedVideos),
@@ -158,7 +157,8 @@ class MovieController extends Controller
 
         $watched = new Watched();
 
-        if (!$this->watchedService->inList($id)) {
+
+        if ($this->watchedService->inList($id)) {
             $this->watchedService->insert($watched, $id);
             $this->addFlash('success', 'Movie moved successfully');
         } else {

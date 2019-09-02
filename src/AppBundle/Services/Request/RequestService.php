@@ -54,6 +54,7 @@ class RequestService extends Controller implements RequestServiceInterface
 
         $url = self::BASE_URL . "movie/?api_key=" . self::API_KEY .
             "&query=$query";
+
         return $restClient->get($url)->getContent();
     }
 
