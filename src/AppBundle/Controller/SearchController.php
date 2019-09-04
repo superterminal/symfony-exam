@@ -42,14 +42,14 @@ class SearchController extends Controller
     }
 
     /**
-     * @Route("/search", name="search_action", methods={"POST"})
+     * @Route("/search/movie", name="search_action", methods={"POST"})
      *
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFormData(Request $request)
+    public function getMovieFormData(Request $request)
     {
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
@@ -61,7 +61,7 @@ class SearchController extends Controller
     }
 
     /**
-     * @Route("/search?query={query}", name="search_results", methods={"GET", "POST"})
+     * @Route("/search/movie/?query={query}", name="search_results", methods={"GET", "POST"})
      *
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
@@ -69,7 +69,7 @@ class SearchController extends Controller
      * @param $query
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchResults(Request $request, $query)
+    public function searchMovieResults(Request $request, $query)
     {
         $resultFromApi = $this->requestService->getByQuery($query, $this->container);
 
@@ -88,6 +88,53 @@ class SearchController extends Controller
         );
 
         return $this->render('search/load.html.twig', [
+            'result' => $paginatedMovies,
+        ]);
+    }
+
+    /**
+     * @Route("/search/tv", name="search_tv_action", methods={"POST"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getTvFormData(Request $request)
+    {
+        $search = new Search();
+        $form = $this->createForm(SearchType::class, $search);
+        $form->handleRequest($request);
+
+        return $this->redirectToRoute('search_tv_results', [
+            'query' => $form->getData()->getInput()
+        ]);
+    }
+
+    /**
+     * @Route("/search/tv/?query={query}", name="search_tv_results", methods={"GET", "POST"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param Request $request
+     * @param $query
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function searchTvResults(Request $request, $query)
+    {
+        $resultFromApi = $this->requestService->searchByTvName($query, $this->container);
+
+        $tvSeries = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
+
+        $tv = $this->serializerService->deserializeData($tvSeries, 'BaseTvShow');
+
+        $paginatedMovies = $this->paginatorService->paginate(
+            $tv,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 6)
+        );
+
+        return $this->render('search/load_tv.html.twig', [
             'result' => $paginatedMovies,
         ]);
     }

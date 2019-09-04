@@ -154,7 +154,7 @@ class MovieController extends Controller
     public function addToWatchedFromUnwatched($id)
     {
         $watched = new Watched();
-        
+
         $this->unwatchedService->remove($id);
 
         if (!$this->watchedService->inList($id)) {

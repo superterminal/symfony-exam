@@ -38,6 +38,8 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const POPULAR_TV_BASE_URL = 'https://api.themoviedb.org/3/tv/popular';
 
+    const SEARCH_BY_TV_QUERY_BASE_URL = 'https://api.themoviedb.org/3/search/tv';
+
     const API_KEY = '09d9101382d79a2be4f6c5081fb53919';
 
 
@@ -260,6 +262,15 @@ class RequestService extends Controller implements RequestServiceInterface
         $restClient = $container->get('circle.restclient');
 
         $url = self::DISCOVER_BASE_URL . '?api_key=' . self::API_KEY;
+
+        return $restClient->get($url)->getContent();
+    }
+
+    public function searchByTvName(?string $query, $container)
+    {
+        $restClient = $container->get('circle.restclient');
+
+        $url = self::SEARCH_BY_TV_QUERY_BASE_URL . '?api_key=' . self::API_KEY . "&query=$query";
 
         return $restClient->get($url)->getContent();
     }
