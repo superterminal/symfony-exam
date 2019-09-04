@@ -2,13 +2,12 @@
 
 {% block body %}
 
-    <div class="container body-content">
+    <div class="container body-content col-md-6">
         <h1>Browse tv series here</h1>
-
-        <form action="{{ path('browse_action') }}" method="post" class="col-md-6">
+        <!--/.navbar-->
+        <form action="{{ path('browse_action') }}" method="post">
             <div class="form-group">
-                <label class="col-sm-1 control-label" for="order">Order by</label>
-                <select class="form-control" id="order" name="browse[orderBy]">
+                Popularity: <select class="form-control" id="order" name="browse[orderBy]">
                     <option value="popularity.desc">Popularity desc</option>
                     <option value="popularity.asc">Popularity asc</option>
                     <option value="release_date.asc">Release date asc</option>
@@ -16,22 +15,19 @@
                     <option value="vote_average.asc">Average vote asc</option>
                     <option value="vote_average.desc">Average vote desc</option>
                 </select>
-                <label class="col-sm-1 control-label" for="order">Genres</label>
-                <select class="form-control" id="order" name="browse[genre]">
+                Genre: <select class="form-control" id="order" name="browse[genre]">
                     <option disabled selected>No genre</option>
                     {% for genre in genres %}
                         <option value="{{ genre.id }}">{{ genre.name }}</option>
                     {% endfor %}
                 </select>
-                <label class="col-sm-1 control-label" for="releaseYear">Release year</label>
-                <select class="form-control" id="order" name="browse[releaseYear]">
+                Release year<select class="form-control" id="order" name="browse[releaseYear]">
                     <option disabled selected>No year</option>
                     {% for i in range(2020, 1970) %}
                         <option value="{{ i }}">{{ i }}</option>
                     {% endfor %}
                 </select>
-                <label class="col-sm-1 control-label" for="releaseYear">Language</label>
-                <select class="form-control" id="order" name="browse[language]">
+                Language: <select class="form-control" id="order" name="browse[language]">
                     <option value="en" selected>English</option>
                     {% for language in languages %}
                         <option value="{{ language.getIso6391 }}">{{ language.englishName}}</option>
@@ -40,16 +36,18 @@
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
+    </div>
 
-        <h1>Or search by movie name</h1>
-        <form action="{{ path('search_action') }}" method="post" class="col-md-6">
+    <div class="container col-md-6">
+        <h1>Or search by tv name</h1>
+        <form action="{{ path('search_tv_action') }}" method="post" >
             <div class="form-group">
-                <label class="col-sm-3 control-label" for="search">Search for movie</label>
+                <label class="col-sm-3 control-label" for="search">Search for tv show</label>
                 <div class="col-sm-6">
                     <input type="search" class="form-control" id="search" placeholder="Search" name="search[input]" required>
                 </div>
+                <button type="submit" class="btn btn-primary">Search</button>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
 {% endblock %}

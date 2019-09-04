@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{#{% block stylesheets %}#}
+{#    {{ parent() }}#}
+{#    <link rel="stylesheet" href="{{ asset('css/movies/search_view.css') }}">#}
+{#    <link rel="stylesheet" href="{{ asset('js/imageEffect.js') }}">#}
+{#{% endblock %}#}
+
+{% block main %}
+
+    Total items: {{ result.getTotalItemCount }} <br>
+    <br>
+    <div class="container body-content text-center">
+        <div class="row">
+            {% for tv in result %}
+                <div class="col-md-4">
+                    <article>
+                        <a href="{{ path('view_tv_show', {id: tv.id}) }}">
+                            <img src="{{ loadImage(tv.posterPath) }}" alt="" width="200px" height="300px">
+                            <h5>{{ tv.originalName }}</h5>
+                        </a>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(result) }}
+        </div>
+    </div>
+
+{% endblock %}
