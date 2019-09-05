@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\TvSeason;
 use AppBundle\Services\Comment\CommentServiceInterface;
 use AppBundle\Services\Paginator\PaginatorServiceInterface;
 use AppBundle\Services\Request\RequestServiceInterface;
