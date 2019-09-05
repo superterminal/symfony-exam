@@ -118,14 +118,14 @@ class BrowseController extends Controller
 
 
     /**
-     * @Route("/browse/search", name="browse_action", methods={"POST"})
+     * @Route("/browse/search/movies", name="browse_movies_action", methods={"POST"})
      *
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFormData(Request $request)
+    public function getFormDataMovies(Request $request)
     {
         $browse = new Browse();
         $form = $this->createForm(BrowseType::class, $browse);
@@ -140,7 +140,29 @@ class BrowseController extends Controller
     }
 
     /**
-     * @Route("/browse/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}&lang={language}", name="browse_movie_results", methods={"GET", "POST"})
+     * @Route("/browse/search/tv", name="browse_tv_action", methods={"POST"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getFormDataTv(Request $request)
+    {
+        $browse = new Browse();
+        $form = $this->createForm(BrowseType::class, $browse);
+        $form->handleRequest($request);
+
+        return $this->redirectToRoute('browse_tv_results', [
+            'orderBy' => $form->getData()->getOrderBy(),
+            'genre' => $form->getData()->getGenre() == null ? '\\' : $form->getData()->getGenre(),
+            'releaseYear' => $form->getData()->getReleaseYear() == null ? '\\' : $form->getData()->getReleaseYear(),
+            'language' => $form->getData()->getLanguage() == 'xx' ? '\\' : $form->getData()->getLanguage()
+        ]);
+    }
+
+    /**
+     * @Route("/browse/movies/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}&lang={language}", name="browse_movie_results", methods={"GET", "POST"})
      *
      * @param Request $request
      * @param null $orderBy
@@ -149,9 +171,9 @@ class BrowseController extends Controller
      * @param null $releaseYear
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchResults(Request $request, $orderBy, $genre, $releaseYear, $language)
+    public function searchMovieResults(Request $request, $orderBy, $genre, $releaseYear, $language)
     {
-        $resultFromApi = $this->requestService->getByFilters($orderBy, $genre, $releaseYear, $language, $this->container);
+        $resultFromApi = $this->requestService->getByFilters('movie', $orderBy, $genre, $releaseYear, $language, $this->container);
 
         $moviesAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
 
@@ -167,6 +189,37 @@ class BrowseController extends Controller
             'orderBy' => $orderBy,
             'genre' => $genre,
             'result' => $paginatedMovies,
+        ]);
+    }
+
+    /**
+     * @Route("/browse/tv/results?order_by={orderBy}&genre={genre}&release_year={releaseYear}&lang={language}", name="browse_tv_results", methods={"GET", "POST"})
+     *
+     * @param Request $request
+     * @param null $orderBy
+     * @param null $genre
+     * @param $language
+     * @param null $releaseYear
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function searchTvResults(Request $request, $orderBy, $genre, $releaseYear, $language)
+    {
+        $resultFromApi = $this->requestService->getByFilters('tv', $orderBy, $genre, $releaseYear, $language, $this->container);
+
+        $tvAsArray = $this->serializerService->deserialize($resultFromApi, 'Page')->getResults();
+
+        $tvs = $this->serializerService->deserializeData($tvAsArray, 'TvShow');
+
+        $paginatedTv = $this->paginatorService->paginate(
+            $tvs,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 6)
+        );
+
+        return $this->render('browse/results_tv.html.twig', [
+            'orderBy' => $orderBy,
+            'genre' => $genre,
+            'result' => $paginatedTv,
         ]);
     }
 
