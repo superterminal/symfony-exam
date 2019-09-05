@@ -18,7 +18,7 @@ class RequestService extends Controller implements RequestServiceInterface
 
     const GET_BY_TVID_BASE_URL = 'https://api.themoviedb.org/3/tv/';
 
-    const DISCOVER_BASE_URL = 'https://api.themoviedb.org/3/discover/movie';
+    const DISCOVER_BASE_URL = 'https://api.themoviedb.org/3/discover/';
 
     const GENRE_BASE_URL = 'https://api.themoviedb.org/3/genre/movie/list';
 
@@ -112,6 +112,7 @@ class RequestService extends Controller implements RequestServiceInterface
     }
 
     /**
+     * @param $showType
      * @param string $orderBy
      * @param string $genre
      * @param string $releaseYear
@@ -119,7 +120,7 @@ class RequestService extends Controller implements RequestServiceInterface
      * @param $container
      * @return mixed
      */
-    public function getByFilters($orderBy, $genre, $releaseYear, $language, $container)
+    public function getByFilters($showType, $orderBy, $genre, $releaseYear, $language, $container)
     {
         $restClient = $container->get('circle.restclient');
 
@@ -135,7 +136,9 @@ class RequestService extends Controller implements RequestServiceInterface
             $language = '';
         }
 
-        $url = self::DISCOVER_BASE_URL . "?api_key=" . self::API_KEY . "&sort_by=$orderBy&primary_release_year=$releaseYear&with_genres=$genre&with_original_language=$language";
+
+        $url = self::DISCOVER_BASE_URL . $showType . "?api_key=" . self::API_KEY . "&sort_by=$orderBy&primary_release_year=$releaseYear&with_genres=$genre&with_original_language=$language";
+
 
         return $restClient->get($url)->getContent();
     }
