@@ -4,38 +4,37 @@
 
     <div class="container body-content col-md-6">
         <h1>Browse tv series here</h1>
-        <!--/.navbar-->
-{#        <form action="{{ path('browse_action') }}" method="post">#}
-{#            <div class="form-group">#}
-{#                Popularity: <select class="form-control" id="order" name="browse[orderBy]">#}
-{#                    <option value="popularity.desc">Popularity desc</option>#}
-{#                    <option value="popularity.asc">Popularity asc</option>#}
-{#                    <option value="release_date.asc">Release date asc</option>#}
-{#                    <option value="release_date.desc">Release date desc</option>#}
-{#                    <option value="vote_average.asc">Average vote asc</option>#}
-{#                    <option value="vote_average.desc">Average vote desc</option>#}
-{#                </select>#}
-{#                Genre: <select class="form-control" id="order" name="browse[genre]">#}
-{#                    <option disabled selected>No genre</option>#}
-{#                    {% for genre in genres %}#}
-{#                        <option value="{{ genre.id }}">{{ genre.name }}</option>#}
-{#                    {% endfor %}#}
-{#                </select>#}
-{#                Release year<select class="form-control" id="order" name="browse[releaseYear]">#}
-{#                    <option disabled selected>No year</option>#}
-{#                    {% for i in range(2020, 1970) %}#}
-{#                        <option value="{{ i }}">{{ i }}</option>#}
-{#                    {% endfor %}#}
-{#                </select>#}
-{#                Language: <select class="form-control" id="order" name="browse[language]">#}
-{#                    <option value="en" selected>English</option>#}
-{#                    {% for language in languages %}#}
-{#                        <option value="{{ language.getIso6391 }}">{{ language.englishName}}</option>#}
-{#                    {% endfor %}#}
-{#                </select>#}
-{#            </div>#}
-{#            <button type="submit" class="btn btn-primary">Search</button>#}
-{#        </form>#}
+        <form action="{{ path('browse_tv_action') }}" method="post">
+            <div class="form-group">
+                Popularity: <select class="form-control" id="order" name="browse[orderBy]">
+                    <option value="popularity.desc">Popularity desc</option>
+                    <option value="popularity.asc">Popularity asc</option>
+                    <option value="release_date.asc">Release date asc</option>
+                    <option value="release_date.desc">Release date desc</option>
+                    <option value="vote_average.asc">Average vote asc</option>
+                    <option value="vote_average.desc">Average vote desc</option>
+                </select>
+                Genre: <select class="form-control" id="order" name="browse[genre]">
+                    <option disabled selected>No genre</option>
+                    {% for genre in genres %}
+                        <option value="{{ genre.id }}">{{ genre.name }}</option>
+                    {% endfor %}
+                </select>
+                Release year<select class="form-control" id="order" name="browse[releaseYear]">
+                    <option disabled selected>No year</option>
+                    {% for i in range(2020, 1970) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                Language: <select class="form-control" id="order" name="browse[language]">
+                    <option value="en" selected>English</option>
+                    {% for language in languages %}
+                        <option value="{{ language.getIso6391 }}">{{ language.englishName}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
     </div>
 
     <div class="container col-md-6">
