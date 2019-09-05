@@ -264,7 +264,7 @@ class RequestService extends Controller implements RequestServiceInterface
     {
         $restClient = $container->get('circle.restclient');
 
-        $url = self::DISCOVER_BASE_URL . '?api_key=' . self::API_KEY;
+        $url = self::DISCOVER_BASE_URL . 'movie?api_key=' . self::API_KEY;
 
         return $restClient->get($url)->getContent();
     }
